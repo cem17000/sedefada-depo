@@ -1,0 +1,24 @@
+# Sedef Adası - sedefada.com
+# Tüm arama motorları için site haritası ve yönlendirmeler
+
+Sitemap: https://sedefada.com/sitemap.xml
+
+User-agent: *
+Allow: /
+
+# Crawl-delay: 10
+
+# Önemli sayfalar
+Allow: /sedef-adasi-ve-tarihi
+Allow: /ulasim-tarifesi
+Allow: /anilar
+Allow: /videolar
+Allow: /kis-baskadir
+Allow: /web-canli
+
+# Özel dosyalar
+Allow: /public/
+Allow: /*.jpg
+Allow: /*.png
+Allow: /*.webp
+Allow: /*.ico
