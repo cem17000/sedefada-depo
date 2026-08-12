@@ -1,5 +1,5 @@
 /* Font loading optimizasyonu - display: swap ile CLS önleme */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -114,6 +114,111 @@ body.light-mode .blog-content a {
   margin-top: 24px;
   margin-bottom: 12px;
   font-size: 18px;
+}
+
+.prose.memories-content p {
+  margin: 0 0 1.5rem;
+}
+
+.prose.memories-content .newspaper-clipping {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.prose.memories-content .newspaper-clipping h2,
+.prose.memories-content .newspaper-clipping h3 {
+  font-family: 'Libre Baskerville', Georgia, serif;
+}
+
+.prose.memories-content .newspaper-clipping h2 {
+  margin: 0.5rem 0 1.25rem;
+  font-size: 1.4rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.prose.memories-content .newspaper-clipping h3 {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.prose.memories-content .newspaper-image {
+  margin: 1.5rem 0 2rem;
+}
+
+.prose.memories-content .newspaper-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+.prose.memories-content .newspaper-image figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.prose.memories-content > h2 {
+  margin: 3rem 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+  font-size: 1.65rem;
+  line-height: 1.3;
+}
+
+.prose.memories-content > h2:first-of-type {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.prose.memories-content > h3 {
+  margin: 2.25rem 0 1rem;
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
+body.light-mode .prose.memories-content > h2 {
+  border-bottom-color: rgb(0 0 0 / 0.12);
+}
+
+@media (max-width: 767px) {
+  .prose.memories-content p {
+    margin-bottom: 1.25rem;
+  }
+
+  .prose.memories-content .newspaper-clipping {
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+
+  .prose.memories-content .newspaper-clipping h2 {
+    font-size: 1.15rem;
+  }
+
+  .prose.memories-content .newspaper-clipping h3 {
+    font-size: 0.94rem;
+  }
+
+  .prose.memories-content > h2 {
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.625rem;
+    font-size: 1.3rem;
+    line-height: 1.35;
+  }
+
+  .prose.memories-content > h2:first-of-type {
+    margin-top: 0.25rem;
+  }
+
+  .prose.memories-content > h3 {
+    margin: 2rem 0 0.75rem;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
 }
 
 @layer components {

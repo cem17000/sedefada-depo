@@ -13,6 +13,7 @@ import { FAQSection } from './components/FAQSection';
 import { useLanguage } from './lib/useLanguage';
 import { useSEO, getPageSEO } from './lib/useSEO';
 import content from './data/content.json';
+import { englishNewspaperClipping } from './data/englishNewspaperClipping';
 
 // Route mapping for clean URLs
 const ROUTE_MAP: Record<string, string> = {
@@ -456,12 +457,16 @@ function AppContent() {
   const [isNotFound, setIsNotFound] = useState(false);
 
   const getLocalizedPost = (post: any, currentLang: string) => {
-    const localizedContent =
+    const translatedContent =
       currentLang === 'tr'
         ? post.contents?.tr
         : post.contents?.[currentLang] && post.contents?.[currentLang] !== post.contents?.tr
         ? post.contents?.[currentLang]
         : post.contents?.en ?? post.contents?.tr;
+
+    const localizedContent = post.id === 'anilar' && currentLang === 'en'
+      ? `${englishNewspaperClipping}${translatedContent ?? ''}`
+      : translatedContent;
 
     return {
       ...post,
@@ -652,6 +657,7 @@ function AppContent() {
             key={post.id}
             title={post.title}
             content={post.content}
+            contentClassName={post.id === 'anilar' ? 'memories-content' : undefined}
             publishedAt={post.publishedAt}
             categories={post.categories}
             type={post.type as 'POST' | 'PAGE'}
