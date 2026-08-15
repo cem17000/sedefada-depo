@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import content from '../data/content.json';
-import { BookOpen, Film, Snowflake, Home, Anchor, HelpCircle, Ship, Phone, Globe, Heart, Video, Landmark, Gem } from 'lucide-react';
+import { BookOpen, Film, Snowflake, Home, Anchor, HelpCircle, Ship, Phone, Globe, Heart, Video, Landmark, Gem, Leaf } from 'lucide-react';
 import { WeatherWidget } from './WeatherWidget';
 import { useLanguage } from '../lib/useLanguage';
 import type { Translations } from '../lib/i18n';
@@ -20,6 +20,7 @@ const iconMap: Record<string, React.ReactNode> = {
   'fa-solid fa-landmark': <Landmark className="w-4 h-4" />,
   'fa-solid fa-gem': <Gem className="w-4 h-4" />,
   'fa-solid fa-heart': <Heart className="w-4 h-4" />,
+  'fa-solid fa-leaf': <Leaf className="w-4 h-4" />,
   'fa-solid fa-video': <Video className="w-4 h-4" />,
   'fa-solid fa-snowflake': <Snowflake className="w-4 h-4" />,
   'fa-solid fa-ship': <Ship className="w-4 h-4" />,
@@ -57,6 +58,7 @@ const NAV_CONFIG = (content.navItems as NavConfigSource[])
 const NAV_DISPLAY_NAME: Record<string, keyof Translations> = {
   sedefada_tarihi: 'navHakkinda',
   anilar: 'navYerlesim',
+  ekoloji: 'navEkoloji',
   videolar: 'navFilmler',
   kis_baskadir: 'navKis',
   ulasim_tarife: 'navUlasim',

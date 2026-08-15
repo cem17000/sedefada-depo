@@ -185,6 +185,33 @@ body.light-mode .prose.memories-content > h2 {
   border-bottom-color: rgb(0 0 0 / 0.12);
 }
 
+.prose.ecology-content p {
+  margin: 0 0 1.25rem;
+  line-height: 1.8;
+}
+
+.prose.ecology-content h2 {
+  margin: 2.75rem 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+  font-size: 1.6rem;
+  line-height: 1.35;
+}
+
+.prose.ecology-content h2:first-child {
+  margin-top: 0;
+}
+
+.prose.ecology-content h3 {
+  margin: 2rem 0 0.875rem;
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
+body.light-mode .prose.ecology-content h2 {
+  border-bottom-color: rgb(0 0 0 / 0.12);
+}
+
 @media (max-width: 767px) {
   .prose.memories-content p {
     margin-bottom: 1.25rem;
@@ -218,6 +245,21 @@ body.light-mode .prose.memories-content > h2 {
     margin: 2rem 0 0.75rem;
     font-size: 1.05rem;
     line-height: 1.4;
+  }
+
+  .prose.ecology-content p {
+    margin-bottom: 1.1rem;
+    line-height: 1.72;
+  }
+
+  .prose.ecology-content h2 {
+    margin: 2.25rem 0 1rem;
+    font-size: 1.3rem;
+  }
+
+  .prose.ecology-content h3 {
+    margin: 1.75rem 0 0.75rem;
+    font-size: 1.05rem;
   }
 }
 

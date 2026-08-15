@@ -112,6 +112,17 @@ export function getPageSEO(
         ? ['Sedef Adası anıları', 'ada hayatı', 'Mahama', 'Suna Giritli', 'ada sakinleri', 'Sedef Adası hikayeleri']
         : ['Sedef Island memories', 'island life', 'Mahama', 'Suna Giritli', 'islanders', 'Sedef Island stories']
     },
+    'ekoloji': {
+      title: lang === 'tr'
+        ? 'Sedef Adası Ekolojisi - Flora, Fauna ve Doğal Yaşam | sedefada.com'
+        : 'Sedef Island Ecology - Flora, Fauna & Wildlife | sedefada.com',
+      description: lang === 'tr'
+        ? 'Sedef Adası\'nın doğal yapısı, florası, faunası, göçmen kuşları, deniz ekosistemi, koruma statüleri ve ekolojik geleceği hakkında kapsamlı bilgi.'
+        : 'Explore the natural structure, flora, fauna, migratory birds, marine ecosystem, conservation status and ecological future of Sedef Island.',
+      keywords: lang === 'tr'
+        ? ['Sedef Adası ekolojisi', 'Sedef Adası flora', 'Sedef Adası fauna', 'göçmen kuşlar', 'Marmara Denizi ekosistemi']
+        : ['Sedef Island ecology', 'Sedef Island flora', 'Sedef Island fauna', 'migratory birds', 'Marmara Sea ecosystem']
+    },
     'videolar': {
       title: lang === 'tr'
         ? 'Sedef Adası Videoları - Belgesel ve Tarihi Görüntüler | sedefada.com'
@@ -195,6 +206,7 @@ export function getPageSEO(
     'iletisim_bilgileri': 'cesitli-iletisim-bilgisi',
     'web': 'web-canli',
     'anilar': 'anilar',
+    'ekoloji': 'ekoloji',
     'videolar': 'videolar'
   };
 

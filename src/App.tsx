@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { MarmarayWidget } from './components/MarmarayWidget';
 import { MetroRouteFinder } from './components/MetroRouteFinder';
 import { FAQSection } from './components/FAQSection';
+import { EcologyPage } from './components/EcologyPage';
 import { useLanguage } from './lib/useLanguage';
 import { useSEO, getPageSEO } from './lib/useSEO';
 import content from './data/content.json';
@@ -19,6 +20,7 @@ import { englishNewspaperClipping } from './data/englishNewspaperClipping';
 const ROUTE_MAP: Record<string, string> = {
   'sedef-adasi-ve-tarihi': 'sedefada_tarihi',
   'anilar': 'anilar',
+  'ekoloji': 'ekoloji',
   'videolar': 'videolar',
   'kis-baskadir': 'kis_baskadir',
   'ulasim-tarifesi': 'ulasim_tarife',
@@ -27,6 +29,7 @@ const ROUTE_MAP: Record<string, string> = {
   // English routes
   'en/sedef-adasi-ve-tarihi': 'sedefada_tarihi',
   'en/anilar': 'anilar',
+  'en/ekoloji': 'ekoloji',
   'en/videolar': 'videolar',
   'en/kis-baskadir': 'kis_baskadir',
   'en/ulasim-tarifesi': 'ulasim_tarife',
@@ -38,6 +41,7 @@ const ROUTE_MAP: Record<string, string> = {
 const REVERSE_ROUTE_MAP: Record<string, string> = {
   'sedefada_tarihi': 'sedef-adasi-ve-tarihi',
   'anilar': 'anilar',
+  'ekoloji': 'ekoloji',
   'videolar': 'videolar',
   'kis_baskadir': 'kis-baskadir',
   'ulasim_tarife': 'ulasim-tarifesi',
@@ -58,6 +62,12 @@ const PAGE_METADATA: Record<string, { title: string; description: string; schema
     description: 'Sedef Adası\'nda yaşayanların anıları, ada yaşamının güzel hatıraları, Mahama\'dan Suna\'nın Kafkas Pilavı partilerine, ada sakinlerinin duygusal hikayeleri.',
     schemaType: 'Blog',
     keywords: ['Sedef Adası anıları', 'ada hayatı', 'Mahama', 'Suna Giritli', 'ada sakinleri']
+  },
+  'ekoloji': {
+    title: 'Ekoloji - Sedef Adası Doğal Yaşamı ve Ekosistemi',
+    description: 'Sedef Adası\'nın doğal yapısı, florası, faunası, göçmen kuşları, deniz ekosistemi, koruma statüleri ve ekolojik geleceği hakkında kapsamlı bilgi.',
+    schemaType: 'BlogPosting',
+    keywords: ['Sedef Adası ekolojisi', 'Sedef Adası flora', 'Sedef Adası fauna', 'göçmen kuşlar', 'Marmara Denizi ekosistemi']
   },
   'videolar': {
     title: 'Videolar - Sedef Adası Belgeseli ve Tarihi Video Arşivi',
@@ -640,6 +650,7 @@ function AppContent() {
       );
     }
     if (viewMode === 'gallery') return <Gallery images={images} />;
+    if (activeItem?.id === 'ekoloji') return <EcologyPage lang={lang} />;
     if (posts.length === 0 && activeTitle) {
       return (
         <div className="flex flex-col items-center justify-center py-16 text-center bg-sedef-card-bg border border-dashed border-sedef-border rounded-xl">
@@ -702,6 +713,7 @@ function AppContent() {
               <h1 className="text-2xl md:text-3xl font-bold text-sedef-primary">
                 {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? '🐚 Sedef Adası ve Tarihi' : '🐚 Sedef Island and Its History')}
                 {activeTitle === 'anilar' && (lang === 'tr' ? 'Sedef Adası Anıları' : 'Sedef Island Memories')}
+                {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Sedef Adası Ekolojisi' : 'Ecology of Sedef Island')}
                 {activeTitle === 'videolar' && (lang === 'tr' ? 'Sedef Adası Videoları' : 'Sedef Island Videos')}
                 {activeTitle === 'ulasim_tarife' && (lang === 'tr' ? 'Sedef Adası Ulaşım Rehberi' : 'Transportation Guide to Sedef Island')}
                 {activeTitle === 'kis_baskadir' && (lang === 'tr' ? 'Sedef Adası\'nda Kış' : 'Winter on Sedef Island')}
@@ -720,6 +732,7 @@ function AppContent() {
                   <li className="text-sedef-primary font-medium">
                     {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? 'Tarihçe' : 'History')}
                     {activeTitle === 'anilar' && (lang === 'tr' ? 'Anılar' : 'Memories')}
+                    {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Ekoloji' : 'Ecology')}
                     {activeTitle === 'videolar' && (lang === 'tr' ? 'Videolar' : 'Videos')}
                     {activeTitle === 'ulasim_tarife' && (lang === 'tr' ? 'Ulaşım' : 'Transportation')}
                     {activeTitle === 'kis_baskadir' && (lang === 'tr' ? 'Kış' : 'Winter')}

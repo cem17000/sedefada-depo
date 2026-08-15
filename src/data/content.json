@@ -18,6 +18,13 @@
       "blogSlug": "anilar"
     },
     {
+      "id": "ekoloji",
+      "type": "post",
+      "icon": "fa-solid fa-leaf",
+      "blogSlug": "sedef-adasi",
+      "postId": "ekoloji"
+    },
+    {
       "id": "videolar",
       "type": "blog",
       "icon": "fa-solid fa-video",
