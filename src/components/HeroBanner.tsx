@@ -4,19 +4,19 @@ import { useLanguage } from '../lib/useLanguage';
 
 const IMAGES = [
   {
+    src: '/sedeffoto.jpg',
+    alt: 'Sedef Adası havadan görünüm',
+    objectPosition: 'center center',
+  },
+  {
     src: '/sedefflower.jpg',
     alt: 'Sedef Adası çiçeği - Lunaria',
     objectPosition: 'center center',
   },
-  {
-    src: '/sedef-adasi-all.jpg',
-    alt: 'Sedef Adası havadan görünüm',
-    objectPosition: 'center 40%',
-  },
 ];
 
-const INTERVAL = 20000; // 20 saniye
-const FADE_DURATION = 1500; // ms
+const INTERVAL = 15000;
+const FADE_DURATION = 1200;
 
 export function HeroBanner() {
   const [current, setCurrent] = useState(0);
@@ -24,14 +24,27 @@ export function HeroBanner() {
   const { lang } = useLanguage();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setVisible(false);
-      setTimeout(() => {
+    let fadeTimer: ReturnType<typeof setTimeout>;
+    let swapTimer: ReturnType<typeof setTimeout>;
+
+    const scheduleTransition = () => {
+      fadeTimer = setTimeout(() => {
+        setVisible(false);
+      }, INTERVAL - FADE_DURATION);
+
+      swapTimer = setTimeout(() => {
         setCurrent((prev) => (prev + 1) % IMAGES.length);
         setVisible(true);
-      }, FADE_DURATION);
-    }, INTERVAL);
-    return () => clearInterval(timer);
+        scheduleTransition();
+      }, INTERVAL);
+    };
+
+    scheduleTransition();
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(swapTimer);
+    };
   }, []);
 
   const heroSubtitle = lang === 'tr'
@@ -39,13 +52,13 @@ export function HeroBanner() {
     : 'The smallest and easternmost of Istanbul\'s Princes\' Islands. Where history, nature and tranquility meet.';
 
   return (
-    <div className="relative w-full h-40 md:h-64 overflow-hidden bg-sedef-bg flex items-center mt-24 md:mt-24">
-      {/* Resim Alanı (Mobil için daha yoğun degrade maskesi) */}
+    <div className="relative w-full h-56 md:h-96 overflow-hidden bg-sedef-bg flex items-center mt-24 md:mt-24">
+      {/* İki görsel de ada fotoğrafının oranındaki aynı çerçeveyi kullanır. */}
       <div
-        className="absolute right-0 top-0 h-full w-full md:w-3/4 z-0 pointer-events-none"
+        className="absolute right-0 top-1/2 z-0 aspect-[880/487] w-full -translate-y-1/2 pointer-events-none md:h-full md:w-auto"
         style={{
-          maskImage: 'linear-gradient(to right, transparent 20%, black 90%)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent 20%, black 90%)',
+          maskImage: 'linear-gradient(to right, transparent 0%, black 45%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 45%, black 100%)',
         }}
       >
         <OptimizedImage
@@ -59,11 +72,14 @@ export function HeroBanner() {
           }}
           objectFit="cover"
           objectPosition={IMAGES[current].objectPosition}
+          widths={[]}
           priority={current === 0} // İlk resim öncelikli yüklensin
           loading={current === 0 ? 'eager' : 'lazy'}
           placeholder="blur"
         />
       </div>
+
+      <div className="absolute inset-0 z-[1] pointer-events-none bg-gradient-to-t from-sedef-bg/45 via-transparent to-sedef-bg/10 md:from-sedef-bg/25" />
 
       {/* Metin Alanı */}
       <div className="relative z-10 px-6 md:px-16 w-full md:w-2/3 flex flex-col justify-center">
