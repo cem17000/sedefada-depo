@@ -186,11 +186,12 @@ export function getPageSEO(
     // Default SEO data for home page or unknown pages - optimized
     return {
       title: lang === 'tr' 
-        ? 'Sedef Adası - İstanbul Prens Adaları\'nın Gizli Cenneti | sedefada.com' 
-        : 'Sedef Island - Istanbul\'s Hidden Paradise | sedefada.com',
+        ? 'Sedef Adası | Tarihi, Doğası, Ulaşım ve Ada Yaşamı' 
+        : 'Sedef Island | History, Nature, Transport and Island Life',
       description: lang === 'tr'
-        ? 'Sedef Adası, İstanbul Prens Adaları\'nın en küçük ve en doğusundaki ada. Tarih, doğa ve huzurun buluştuğu nokta. Ulaşım, tarihi ve anılar için tıklayın.'
-        : 'Sedef Island, the smallest and easternmost of Istanbul\'s Princes\' Islands. Where history, nature and tranquility meet. Click for transportation, history and memories.',
+        ? 'Sedef Adası\'nın tarihi, doğal yaşamı, ulaşımı, mimarisi, anıları, eski fotoğrafları, haritaları ve güncel ada yaşamı hakkında kapsamlı bilgi ve arşiv.'
+        : 'A comprehensive guide and archive about Sedef Island, including its history, nature, transport, architecture, memories, historic photographs, maps and island life.',
+      canonicalUrl: lang === 'tr' ? `${BASE_URL}/` : `${BASE_URL}/en/`,
       keywords: lang === 'tr'
         ? ['sedef adası', 'prens adaları', 'istanbul adaları', 'marmara denizi', 'Sedef Adası gezisi', 'İstanbul\'un adaları']
         : ['sedef island', 'princes islands', 'istanbul islands', 'sea of marmara', 'Sedef Island tour', 'Istanbul islands'],

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { OptimizedImage } from './OptimizedImage';
 import { useLanguage } from '../lib/useLanguage';
+import { useLocation } from 'react-router-dom';
 
 const IMAGES = [
   {
@@ -22,6 +23,8 @@ export function HeroBanner() {
   const [current, setCurrent] = useState(0);
   const [visible, setVisible] = useState(true);
   const { lang } = useLanguage();
+  const location = useLocation();
+  const isHome = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/';
 
   useEffect(() => {
     let fadeTimer: ReturnType<typeof setTimeout>;
@@ -84,16 +87,20 @@ export function HeroBanner() {
       {/* Metin Alanı */}
       <div className="relative z-10 px-6 md:px-16 w-full md:w-2/3 flex flex-col justify-center">
         <h1 className="leading-tight drop-shadow-md">
-          <span className="block text-lg md:text-2xl font-semibold text-teal-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-            {lang === 'tr' ? "Marmara'nın İncisi" : 'The Pearl of Marmara'}
-          </span>
+          {!isHome && (
+            <span className="block text-lg md:text-2xl font-semibold text-teal-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+              {lang === 'tr' ? "Marmara'nın İncisi" : 'The Pearl of Marmara'}
+            </span>
+          )}
           <span className="block text-3xl md:text-6xl font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             {lang === 'tr' ? 'Sedef Adası' : 'Sedef Island'}
           </span>
         </h1>
-        <p className="mt-3 text-xs md:text-base text-white font-medium italic drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] max-w-[220px] md:max-w-none">
-          {heroSubtitle}
-        </p>
+        {!isHome && (
+          <p className="mt-3 text-xs md:text-base text-white font-medium italic drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] max-w-[220px] md:max-w-none">
+            {heroSubtitle}
+          </p>
+        )}
       </div>
     </div>
   );

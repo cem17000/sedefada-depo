@@ -4,6 +4,7 @@ import { BookOpen, Film, Snowflake, Home, Anchor, HelpCircle, Ship, Phone, Globe
 import { WeatherWidget } from './WeatherWidget';
 import { useLanguage } from '../lib/useLanguage';
 import type { Translations } from '../lib/i18n';
+import { Link } from 'react-router-dom';
 
 export interface NavItem {
   id: string;
@@ -66,10 +67,21 @@ const NAV_DISPLAY_NAME: Record<string, keyof Translations> = {
   iletisim_bilgileri: 'navIletisim',
 };
 
+const NAV_ROUTES: Record<string, string> = {
+  sedefada_tarihi: '/sedef-adasi-ve-tarihi',
+  anilar: '/anilar',
+  ekoloji: '/ekoloji',
+  videolar: '/videolar',
+  kis_baskadir: '/kis-baskadir',
+  ulasim_tarife: '/ulasim-tarifesi',
+  web: '/web-canli',
+  iletisim_bilgileri: '/cesitli-iletisim-bilgisi',
+};
+
 type ConfigItemType = typeof NAV_CONFIG[number];
 
 export function Navigation({ onNavigate, activeItem, renderMobileContent }: NavigationProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [activeId, setActiveId] = useState<string>('sedefada_tarihi');
 
   useEffect(() => {
@@ -132,8 +144,12 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent }: Navi
 
             return (
               <div key={config.id} className="flex flex-col w-full">
-                <button
-                  onClick={() => handleItemClick(config)}
+                <Link
+                  to={lang === 'en' ? `/en${NAV_ROUTES[config.id]}` : NAV_ROUTES[config.id]}
+                  onClick={(event) => {
+                    if (isActive) event.preventDefault();
+                    handleItemClick(config);
+                  }}
                   className={`nav-item w-full ${isActive ? 'active border-sedef-accent bg-sedef-card-bg shadow-lg translate-x-1' : ''}`}
                 >
                   <div className="flex items-center gap-3">
@@ -143,7 +159,7 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent }: Navi
                     <span className="text-sm font-medium text-sedef-primary">{getDisplayName(config)}</span>
                   </div>
                   {/* Sayı sayaçlarının basıldığı yuvarlak badge alanı burası da dahil olmak üzere tamamen temizlendi */}
-                </button>
+                </Link>
 
                 {isActive && activeItem && activeItem.id === config.id && (
                   <div className="mt-2 mb-4 p-4 bg-sedef-card-bg/40 border border-sedef-border rounded-xl md:hidden w-full overflow-hidden">

@@ -17,7 +17,7 @@ export const translations = {
     navYerlesim: 'Anılar',
     navEkoloji: 'Ekoloji',
     navFilmler: 'Videolar',
-    navKis: "Sedef Adası'nda Kış Başkadır",
+    navKis: "Sedef Adası'nda Kış",
     navUlasim: 'Ulaşım ve Tarife',
     navIletisim: 'Faydalı Telefonlar',
     navWeb: 'Web ve Marmara Canlı Görüntüsü',

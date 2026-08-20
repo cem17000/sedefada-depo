@@ -101,6 +101,53 @@ const PAGE_METADATA: Record<string, { title: string; description: string; schema
   }
 };
 
+const HOME_DESCRIPTIONS = {
+  tr: 'Sedef Adası\'nın tarihi, doğal yaşamı, ulaşımı, mimarisi, anıları, eski fotoğrafları, haritaları ve güncel ada yaşamı hakkında kapsamlı bilgi ve arşiv.',
+  en: 'A comprehensive guide and archive about Sedef Island, including its history, nature, transport, architecture, memories, historic photographs, maps and island life.',
+};
+
+function generateHomeStructuredData(lang: 'tr' | 'en') {
+  const homeUrl = lang === 'tr' ? 'https://sedefada.com/' : 'https://sedefada.com/en/';
+  const organizationId = `${homeUrl}#organization`;
+  const websiteId = `${homeUrl}#website`;
+  const webpageId = `${homeUrl}#webpage`;
+  const inLanguage = lang === 'tr' ? 'tr-TR' : 'en-US';
+
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': websiteId,
+      name: 'sedefada.com',
+      url: homeUrl,
+      publisher: { '@id': organizationId },
+      inLanguage,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': webpageId,
+      name: lang === 'tr' ? 'Sedef Adası' : 'Sedef Island',
+      url: homeUrl,
+      description: HOME_DESCRIPTIONS[lang],
+      isPartOf: { '@id': websiteId },
+      about: { '@id': organizationId },
+      inLanguage,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      '@id': organizationId,
+      name: 'sedefada.com',
+      url: homeUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${homeUrl}favicon.png`,
+      },
+    },
+  ];
+}
+
 // Generate JSON-LD structured data for a page
 function generateStructuredData(itemId: string, lang: string) {
   const metadata = PAGE_METADATA[itemId];
@@ -614,10 +661,12 @@ function AppContent() {
     }
   }, [location, lang, loadPostsForItem]);
 
-  // Ana sayfada structured data'yı temizle
+  // Ana sayfa structured data'sını aktif dile göre ekle
   useEffect(() => {
-    if (location.pathname === '/' || location.pathname === '' || location.pathname === '/en') {
-      injectStructuredData(null);
+    if (location.pathname === '/' || location.pathname === '') {
+      injectStructuredData(generateHomeStructuredData('tr'));
+    } else if (location.pathname === '/en' || location.pathname === '/en/') {
+      injectStructuredData(generateHomeStructuredData('en'));
     }
   }, [location]);
 
@@ -627,13 +676,13 @@ function AppContent() {
       setActiveTitle('');
       setPosts([]);
       setImages([]);
-      navigate('/');
+      navigate(lang === 'en' ? '/en' : '/');
       return;
     }
 
     const routePath = REVERSE_ROUTE_MAP[item.id];
     if (routePath) {
-      navigate(`/${routePath}`);
+      navigate(lang === 'en' ? `/en/${routePath}` : `/${routePath}`);
     }
   };
 

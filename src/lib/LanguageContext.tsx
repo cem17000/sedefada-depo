@@ -4,8 +4,9 @@ import type { Lang, Translations } from './i18n';
 import { LanguageContext } from './useLanguage';
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Site her zaman Türkçe açılsın - localStorage'daki kaydedilmiş dili yoksay
-  const [lang, setLangState] = useState<Lang>('tr');
+  const [lang, setLangState] = useState<Lang>(() =>
+    window.location.pathname === '/en' || window.location.pathname.startsWith('/en/') ? 'en' : 'tr'
+  );
 
   const setLang = (l: Lang) => {
     setLangState(l);
