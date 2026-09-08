@@ -52,7 +52,7 @@ export default defineConfig({
         ],
       },
       // Cache
-      cache: true,
+      cache: false,
       cacheLocation: './node_modules/.vite/image-optimizer',
       // Log
       logStats: true,
