@@ -525,10 +525,14 @@ function AppContent() {
       ? `${englishNewspaperClipping}${translatedContent ?? ''}`
       : translatedContent;
 
+    const versionedContent = post.id === 'ulasim_tarife'
+      ? localizedContent?.replace('/t1.png', '/t1.png?v=2026-09-07')
+      : localizedContent;
+
     return {
       ...post,
       title: post.titles?.[currentLang] ?? post.titles?.en ?? post.titles?.tr ?? post.title,
-      content: localizedContent ?? post.content,
+      content: versionedContent ?? post.content,
       categories: post.categories?.[currentLang] ?? post.categories?.en ?? post.categories?.tr ?? post.categories ?? [],
     };
   };
