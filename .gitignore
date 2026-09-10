@@ -21,4 +21,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+.venv/
+public/ada.jpeg
 .claude/

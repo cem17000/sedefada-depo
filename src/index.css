@@ -42,6 +42,10 @@ body.light-mode .blog-content img {
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 4px 16px rgba(0, 0, 0, 0.22);
 }
 
+.prose div:has(> img[src="/şehirhatları_kış_tarifesi_2027.png"]) {
+  flex: 1 1 100% !important;
+}
+
 .blog-content .post-hero-image img {
   width: 100% !important;
   max-height: 520px !important;

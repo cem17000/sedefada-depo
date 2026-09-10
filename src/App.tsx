@@ -720,7 +720,9 @@ function AppContent() {
           <BlogCard
             key={post.id}
             title={post.title}
-            content={post.content}
+            content={post.id === 'ulasim_tarife'
+              ? `${post.content}\n<div style="margin-top:2rem;"><img src="/ada_tarifesi_2027.png" alt="${lang === 'tr' ? 'Şehir Hatları Büyükada - Sedef Adası akşam tarifesi' : 'City Lines Buyukada - Sedef Island evening timetable'}" style="width:100%;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.10);" /></div>`
+              : post.content}
             contentClassName={post.id === 'anilar' ? 'memories-content' : undefined}
             publishedAt={post.publishedAt}
             categories={post.categories}
