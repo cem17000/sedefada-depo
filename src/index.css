@@ -217,6 +217,23 @@ body.light-mode .prose.ecology-content h2 {
 }
 
 @media (max-width: 767px) {
+  .prose div:has(> img[src="/şehirhatları_kış_tarifesi_2027.png"]),
+  .prose div:has(> img[src="/ada_tarifesi_2027.png"]) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .prose img[src="/şehirhatları_kış_tarifesi_2027.png"],
+  .prose img[src="/ada_tarifesi_2027.png"] {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
   .prose.memories-content p {
     margin-bottom: 1.25rem;
   }
