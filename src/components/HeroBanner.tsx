@@ -54,6 +54,7 @@ export function HeroBanner() {
   const heroSubtitle = lang === 'tr'
     ? 'İstanbul Prens Adaları\'nın en küçük ve en doğusundaki ada. Tarih, doğa ve huzurun buluştuğu nokta.'
     : 'The smallest and easternmost of Istanbul\'s Princes\' Islands. Where history, nature and tranquility meet.';
+  const Heading = isHome ? 'h1' : 'h2';
 
   return (
     <div className="relative w-full h-56 md:h-96 overflow-hidden bg-sedef-bg flex items-center mt-24 md:mt-24">
@@ -87,7 +88,7 @@ export function HeroBanner() {
 
       {/* Metin Alanı */}
       <div className="relative z-10 px-6 md:px-16 w-full md:w-2/3 flex flex-col justify-center">
-        <h1 className="leading-tight drop-shadow-md">
+        <Heading className="leading-tight drop-shadow-md">
           {(!isHome || isTurkishHome) && (
             <span className="block text-lg md:text-2xl font-semibold text-teal-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               {lang === 'tr' ? "Marmara'nın İncisi" : 'The Pearl of Marmara'}
@@ -96,7 +97,7 @@ export function HeroBanner() {
           <span className="block text-3xl md:text-6xl font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             {lang === 'tr' ? 'Sedef Adası' : 'Sedef Island'}
           </span>
-        </h1>
+        </Heading>
         {(!isHome || isTurkishHome) && (
           <p className="mt-3 text-xs md:text-base text-white font-medium italic drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] max-w-[220px] md:max-w-none">
             {heroSubtitle}

@@ -56,7 +56,7 @@ export function Gallery({ images }: GalleryProps) {
           </button>
           <img
             src={lightboxImage}
-            alt="Tam boy görsel"
+              alt={image.title}
             className="max-w-full max-h-[85vh] rounded-xl shadow-2xl border border-sedef-border/50"
           />
         </div>

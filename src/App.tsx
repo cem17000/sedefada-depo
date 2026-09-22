@@ -154,7 +154,11 @@ function generateStructuredData(itemId: string, lang: string) {
   if (!metadata) return null;
 
   const baseUrl = 'https://sedefada.com';
-  const pageUrl = `${baseUrl}/${REVERSE_ROUTE_MAP[itemId] || ''}`;
+  const routePath = REVERSE_ROUTE_MAP[itemId] || '';
+  const homeUrl = lang === 'tr' ? `${baseUrl}/` : `${baseUrl}/en/`;
+  const pageUrl = lang === 'tr'
+    ? `${baseUrl}/${routePath}`
+    : `${baseUrl}/en/${routePath}`;
   const currentYear = new Date().getFullYear();
 
   // BreadcrumbList schema
@@ -166,7 +170,7 @@ function generateStructuredData(itemId: string, lang: string) {
         "@type": "ListItem",
         "position": 1,
         "name": lang === 'tr' ? 'Ana Sayfa' : 'Home',
-        "item": baseUrl
+        "item": homeUrl
       },
       {
         "@type": "ListItem",
@@ -183,7 +187,7 @@ function generateStructuredData(itemId: string, lang: string) {
     "@type": "WebSite",
     "name": lang === 'tr' ? 'Sedef Adası' : 'Sedef Island',
     "alternateName": lang === 'tr' ? ['Sedefadası', 'Sedef Adası'] : ['Sedef Island', 'Mother-of-Pearl Island'],
-    "url": baseUrl,
+    "url": homeUrl,
     "description": lang === 'tr' 
       ? 'İstanbul Prens Adaları\'nın en küçük ve en doğusundaki ada. Tarih, doğa ve huzurun buluştuğu nokta.'
       : 'The smallest and easternmost island of Istanbul\'s Princes\' Islands. Where history, nature and tranquility meet.',
@@ -650,16 +654,9 @@ function AppContent() {
     loadPostsForItem(navItem, lang);
     setLoading(false);
 
-    // Sayfa başlığını güncelle
+      // Sayfa yapılandırılmış verisini güncelle
     const metadata = PAGE_METADATA[itemId];
     if (metadata) {
-      document.title = `${metadata.title} | sedefada.com`;
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute('content', metadata.description);
-      }
-      
-      // Structured data'yı enjekte et
       const schemas = generateStructuredData(itemId, lang);
       injectStructuredData(schemas);
     }
@@ -779,7 +776,7 @@ function AppContent() {
               <nav className="mt-2 text-sm text-sedef-secondary" aria-label="Breadcrumb">
                 <ol className="flex items-center gap-2">
                   <li>
-                    <a href="/" className="hover:text-sedef-accent transition-colors">
+                    <a href={lang === 'en' ? '/en' : '/'} className="hover:text-sedef-accent transition-colors">
                       {lang === 'tr' ? 'Ana Sayfa' : 'Home'}
                     </a>
                   </li>
@@ -809,28 +806,28 @@ function AppContent() {
               <ul className="flex flex-wrap gap-2">
                 {activeTitle !== 'sedefada_tarihi' && (
                   <li>
-                    <Link to="/sedef-adasi-ve-tarihi" className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={lang === 'en' ? '/en/sedef-adasi-ve-tarihi' : '/sedef-adasi-ve-tarihi'} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Sedef Adası Tarihi' : 'History of Sedef Island'}
                     </Link>
                   </li>
                 )}
                 {activeTitle !== 'ulasim_tarife' && (
                   <li>
-                    <Link to="/ulasim-tarifesi" className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={lang === 'en' ? '/en/ulasim-tarifesi' : '/ulasim-tarifesi'} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Ulaşım Rehberi' : 'Transportation Guide'}
                     </Link>
                   </li>
                 )}
                 {activeTitle !== 'anilar' && (
                   <li>
-                    <Link to="/anilar" className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={lang === 'en' ? '/en/anilar' : '/anilar'} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Ada Anıları' : 'Island Memories'}
                     </Link>
                   </li>
                 )}
                 {activeTitle !== 'kis_baskadir' && (
                   <li>
-                    <Link to="/kis-baskadir" className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={lang === 'en' ? '/en/kis-baskadir' : '/kis-baskadir'} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Kış Manzaraları' : 'Winter Scenes'}
                     </Link>
                   </li>

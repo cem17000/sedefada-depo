@@ -4,6 +4,11 @@ export interface SEOData {
   title: string;
   description: string;
   canonicalUrl?: string;
+  alternateUrls?: {
+    tr: string;
+    en: string;
+    default: string;
+  };
   ogImage?: string;
   ogType?: string;
   keywords?: string[];
@@ -29,6 +34,11 @@ export function useSEO(data: SEOData) {
     // Set canonical URL
     const canonicalUrl = data.canonicalUrl || BASE_URL;
     updateCanonicalLink(canonicalUrl);
+    if (data.alternateUrls) {
+      updateAlternateLink('tr', data.alternateUrls.tr);
+      updateAlternateLink('en', data.alternateUrls.en);
+      updateAlternateLink('x-default', data.alternateUrls.default);
+    }
 
     // Update Open Graph tags
     updateMetaTag('property', 'og:title', data.title);
@@ -55,7 +65,7 @@ export function useSEO(data: SEOData) {
     return () => {
       document.title = originalTitle;
     };
-  }, [data.title, data.description, data.canonicalUrl, data.ogImage, data.ogType, data.keywords, data.noIndex]);
+  }, [data.title, data.description, data.canonicalUrl, data.alternateUrls, data.ogImage, data.ogType, data.keywords, data.noIndex]);
 }
 
 function updateMetaTag(attributeType: 'name' | 'property', attributeName: string, content: string) {
@@ -81,6 +91,19 @@ function updateCanonicalLink(url: string) {
   }
   
   canonicalLink.href = url;
+}
+
+function updateAlternateLink(language: 'tr' | 'en' | 'x-default', url: string) {
+  let alternateLink = document.querySelector(`link[rel="alternate"][hreflang="${language}"]`) as HTMLLinkElement;
+
+  if (!alternateLink) {
+    alternateLink = document.createElement('link');
+    alternateLink.rel = 'alternate';
+    alternateLink.hreflang = language;
+    document.head.appendChild(alternateLink);
+  }
+
+  alternateLink.href = url;
 }
 
 // Helper function to generate page-specific SEO data with optimized titles and descriptions
@@ -192,6 +215,11 @@ export function getPageSEO(
         ? 'Sedef Adası\'nın tarihi, doğal yaşamı, ulaşımı, mimarisi, anıları, eski fotoğrafları, haritaları ve güncel ada yaşamı hakkında kapsamlı bilgi ve arşiv.'
         : 'A comprehensive guide and archive about Sedef Island, including its history, nature, transport, architecture, memories, historic photographs, maps and island life.',
       canonicalUrl: lang === 'tr' ? `${BASE_URL}/` : `${BASE_URL}/en/`,
+      alternateUrls: {
+        tr: `${BASE_URL}/`,
+        en: `${BASE_URL}/en/`,
+        default: `${BASE_URL}/`,
+      },
       keywords: lang === 'tr'
         ? ['sedef adası', 'prens adaları', 'istanbul adaları', 'marmara denizi', 'Sedef Adası gezisi', 'İstanbul\'un adaları']
         : ['sedef island', 'princes islands', 'istanbul islands', 'sea of marmara', 'Sedef Island tour', 'Istanbul islands'],
@@ -211,11 +239,20 @@ export function getPageSEO(
     'videolar': 'videolar'
   };
 
+  const routePath = urlMap[pageId] || pageId;
+  const turkishUrl = `${BASE_URL}/${routePath}`;
+  const englishUrl = `${BASE_URL}/en/${routePath}`;
+
   return {
     title: page.title,
     description: page.description,
     keywords: page.keywords,
-    canonicalUrl: `${BASE_URL}/${urlMap[pageId] || pageId}`,
+    canonicalUrl: lang === 'tr' ? turkishUrl : englishUrl,
+    alternateUrls: {
+      tr: turkishUrl,
+      en: englishUrl,
+      default: turkishUrl,
+    },
     ...customData
   };
 }
