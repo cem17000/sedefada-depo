@@ -91,10 +91,6 @@ function renderStaticArticles(itemId: string) {
   }).join('\n');
 }
 
-function renderStaticNavigation() {
-  return STATIC_PAGES.map((page) => `<a href="/${page.route}">${page.heading}</a>`).join('\n');
-}
-
 function renderStaticPage(
   route: string,
   itemId: string,
@@ -128,8 +124,7 @@ function renderStaticPage(
       #root { visibility: hidden; }
       .seo-static-page { max-width: 76rem; margin: 0 auto; padding: 6rem 1.5rem 3rem; }
       .seo-static-header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 2rem; }
-      .seo-static-header a, .seo-static-nav a { color: #00e5ff; }
-      .seo-static-nav { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; margin: 1rem 0 2rem; }
+      .seo-static-header a { color: #00e5ff; }
       .seo-static-card { padding: 1.5rem; margin-bottom: 1.5rem; }
       .seo-static-card h2 { margin: 0 0 1rem; font-size: 1.5rem; }
       @media (max-width: 767px) { .seo-static-page { padding-top: 2rem; } .seo-static-header { align-items: flex-start; flex-direction: column; } }
@@ -139,9 +134,6 @@ function renderStaticPage(
     <div id="root">
       <main class="seo-static-page">
         <header class="seo-static-header"><a href="/">sedefada.com</a><a href="/">Ana Sayfa</a></header>
-        <nav class="seo-static-nav" aria-label="Site bölümleri">
-          ${renderStaticNavigation()}
-        </nav>
         <h1>${heading}</h1>
         ${renderStaticArticles(itemId)}
       </main>
