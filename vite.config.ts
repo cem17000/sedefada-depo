@@ -125,6 +125,7 @@ function renderStaticPage(
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     ${stylesheetLink}
     <style>
+      #root { visibility: hidden; }
       .seo-static-page { max-width: 76rem; margin: 0 auto; padding: 6rem 1.5rem 3rem; }
       .seo-static-header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 2rem; }
       .seo-static-header a, .seo-static-nav a { color: #00e5ff; }

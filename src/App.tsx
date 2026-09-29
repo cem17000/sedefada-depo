@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { BrowserRouter as Router, useLocation, useNavigate, Link } from 'react-router-dom';
 import { Header } from './components/Header';
 import { NotFoundPage } from './components/NotFoundPage';
@@ -525,6 +525,10 @@ function AppContent() {
   const [activeTitle, setActiveTitle] = useState('');
   const [activeItem, setActiveItem] = useState<NavItem | null>(null);
   const [isNotFound, setIsNotFound] = useState(false);
+
+  useLayoutEffect(() => {
+    document.getElementById('root')?.style.setProperty('visibility', 'visible');
+  }, []);
 
   const getLocalizedPost = (post: any, currentLang: string) => {
     const translatedContent =
