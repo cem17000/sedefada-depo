@@ -12,6 +12,13 @@
       ]
     },
     {
+      "id": "guncel_gelismeler",
+      "type": "post",
+      "icon": "fa-solid fa-book-open-reader",
+      "blogSlug": "sedef-adasi",
+      "postId": "guncel_gelismeler"
+    },
+    {
       "id": "anilar",
       "type": "blog",
       "icon": "fa-solid fa-heart",
@@ -225,6 +232,31 @@
       "publishedAt": "2026-05-01T00:00:00.000Z",
       "type": "POST",
       "isSimulated": true
+    },
+    {
+      "id": "guncel_gelismeler",
+      "blogSlug": "sedef-adasi",
+      "titles": {
+        "tr": "Güncel Gelişmeler",
+        "en": "Current Developments"
+      },
+      "contents": {
+        "tr": "<p>Sedef Adası’na ait güncel haberler, imar çalışmaları ve kamu kurumları tarafından yapılan önemli açıklamalar bu bölümde yer almaktadır.</p>\n\n<p>Buradaki içerikler, mümkün olduğunca resmî belgeler ve güvenilir haber kaynakları esas alınarak hazırlanır. Gelişmeler, yayımlandıkları tarihte mevcut olan bilgiler doğrultusunda özetlenir ve yeni bilgiler ortaya çıktıkça güncellenir.</p>\n\n<p>Vapur saatleri ve düzenli ulaşım bilgileri için <a href=\"/ulasim-tarifesi\">Ulaşım ve Tarife</a> bölümünü ziyaret edebilirsiniz.</p>\n\n<h2>Sedef Adası’nı da kapsayan yeni imar planı çalışmaları başladı</h2>\n<p><strong>29 Eylül 2026</strong></p>\n<p>Adalar ilçesine ilişkin 1/5000 ölçekli Koruma Amaçlı Nazım İmar Planı’nın yeniden hazırlanması için çalışmalara başlandı. Yeni planlama süreci, daha önce onaylanan koruma amaçlı imar planları hakkında verilen mahkeme kararlarının ardından gündeme geldi.</p>\n<p>Adalar’ın 1/5000 ölçekli Koruma Amaçlı Nazım İmar Planı ile 1/1000 ölçekli Koruma Amaçlı Uygulama İmar Planı, 12 Mayıs 2023 tarihinde Çevre, Şehircilik ve İklim Değişikliği Bakanlığı tarafından onaylanmıştı. Ancak İstanbul 8. İdare Mahkemesi, 2025 yılında verdiği kararla söz konusu planların tamamının iptaline karar verdi.</p>\n<p>İstanbul Büyükşehir Belediyesi Şehir Planlama Müdürlüğü, mahkeme kararının ardından yeni plan çalışmalarının başlatıldığını açıkladı. Yürürlükteki mevzuata göre 1/5000 ölçekli nazım imar planı ile 1/1000 ölçekli uygulama imar planının eş zamanlı hazırlanması gerekiyor. Hazırlanacak planların daha sonra Çevre, Şehircilik ve İklim Değişikliği Bakanlığına sunulması öngörülüyor.</p>\n<h3>Bu gelişme Sedef Adası açısından ne ifade ediyor?</h3>\n<p><a href=\"/sedef-adasi-ve-tarihi\">Sedef Adası</a>, doğal yapısı, kıyıları, koruma statüleri ve sınırlı yerleşim alanları nedeniyle Adalar’daki planlama sürecinin hassas bölgelerinden biridir. Yeni hazırlanacak planlarda adanın yapılaşma koşulları, doğal karakterinin korunması, kıyı kullanımı, yollar ve günübirlik kullanım alanlarına ilişkin kararların yeniden ele alınması bekleniyor.</p>\n<p>Planlama çalışmalarının başlamış olması, Sedef Adası için yeni yapılaşma kararlarının kesinleştiği anlamına gelmiyor. Sürecin tamamlanabilmesi için planların hazırlanması, ilgili kurumların görüşlerinin alınması, onaylanması ve ilan edilmesi gerekiyor. Planlar askıya çıkarıldığında vatandaşların ve ilgili kuruluşların belirlenen süre içerisinde itiraz etme hakkı da bulunuyor.</p>\n<p>Sedef Adası’na ilişkin kararların nasıl şekilleneceği, hazırlanacak plan belgeleri kamuoyuyla paylaşıldığında daha açık biçimde görülebilecek.</p>\n<p><strong>Kaynaklar:</strong> İstanbul Büyükşehir Belediyesi Şehir Planlama Müdürlüğü; Adalar Belediyesi Meclis kararları.</p>\n\n<h2>Sedef Adası’nın koruma statüsüne ilişkin ikinci değişiklik de iptal edildi</h2>\n<p><strong>7 Kasım 2024</strong></p>\n<p>Sedef Adası’ndaki bazı alanların koruma statüsünü değiştiren Bakanlık kararına karşı açılan davada mahkeme, yapılan düzenlemeyi iptal etti. Kararda, doğal sit alanının bütünlüğünün bozulma riski ve kamu yararı ilkesi üzerinde duruldu.</p>\n<p>Aynı konuda daha önce yapılan bir başka statü değişikliği de Nisan 2023’te iptal edilmiş ve bu karar Mart 2024’te kesinleşmişti. Böylece Sedef Adası’nın bazı bölümlerinde yapılaşma koşullarını etkileyebilecek iki ayrı sit değişikliği yargı kararlarıyla geçersiz hâle gelmiş oldu.</p>\n<p>Bu kararlar Sedef Adası’ndaki bütün yapılaşma ve kullanım tartışmalarını tek başına sona erdirmiyor. Bununla birlikte, adanın doğal alanlarının parça parça değerlendirilmesi yerine <a href=\"/ekoloji\">ekolojik bütünlüğü</a> içinde korunması gerektiğini vurgulayan önemli hukuki kararlar olarak değerlendiriliyor.</p>\n<p>Yeni hazırlanacak koruma amaçlı imar planlarının, bu mahkeme kararlarını ve Sedef Adası’nın doğal sit özelliklerini dikkate alması gerekecek.</p>\n<p><strong>Kaynak:</strong> TMMOB Mimarlar Odası İstanbul Büyükkent Şubesi.</p>",
+        "en": "<p>This section contains current news concerning Sedef Island, planning work, and important statements issued by public authorities.</p>\n\n<p>The content is prepared, wherever possible, on the basis of official documents and reliable news sources. Developments are summarized according to the information available on the date of publication and are updated as new information emerges.</p>\n\n<p>For ferry times and regular transport information, please visit the <a href=\"/en/ulasim-tarifesi\">Transportation and Schedule</a> section.</p>\n\n<h2>New planning work has begun for a zoning plan that also covers Sedef Island</h2>\n<p><strong>29 September 2026</strong></p>\n<p>Work has begun to prepare a new 1:5,000-scale Conservation Master Zoning Plan for the Adalar district. The new planning process came onto the agenda following court rulings concerning previously approved conservation zoning plans.</p>\n<p>The 1:5,000-scale Conservation Master Zoning Plan and the 1:1,000-scale Conservation Implementation Zoning Plan for Adalar were approved by the Ministry of Environment, Urbanization and Climate Change on 12 May 2023. However, the Istanbul 8th Administrative Court ruled in 2025 that the plans should be annulled in their entirety.</p>\n<p>Following the court ruling, the Istanbul Metropolitan Municipality Directorate of Urban Planning announced that new planning work had begun. Under the legislation in force, the 1:5,000-scale master zoning plan and the 1:1,000-scale implementation zoning plan must be prepared simultaneously. The completed plans are expected to be submitted to the Ministry of Environment, Urbanization and Climate Change.</p>\n<h3>What does this development mean for Sedef Island?</h3>\n<p><a href=\"/en/sedef-adasi-ve-tarihi\">Sedef Island</a> is one of the sensitive areas in the Adalar planning process because of its natural character, coasts, conservation designations, and limited settlement areas. The new plans are expected to reconsider decisions concerning the island’s building conditions, the preservation of its natural character, coastal use, roads, and day-use areas.</p>\n<p>The start of planning work does not mean that new development decisions for Sedef Island have been finalized. To complete the process, the plans must be prepared, the views of the relevant institutions must be obtained, and the plans must be approved and published. When the plans are put on public display, residents and relevant organizations will also have the right to object within the specified period.</p>\n<p>How decisions concerning Sedef Island will take shape will become clearer when the planning documents are shared with the public.</p>\n<p><strong>Sources:</strong> Istanbul Metropolitan Municipality Directorate of Urban Planning; Adalar Municipal Council decisions.</p>\n\n<h2>The second change to Sedef Island’s conservation status was also annulled</h2>\n<p><strong>7 November 2024</strong></p>\n<p>In a case brought against a Ministry decision that changed the conservation status of certain areas on Sedef Island, the court annulled the regulation. The ruling emphasized the risk of undermining the integrity of the natural protected area and the principle of public interest.</p>\n<p>A previous change of status on the same issue was also annulled in April 2023, and that ruling became final in March 2024. Thus, two separate changes to protected-area status that could affect development conditions in parts of Sedef Island were invalidated by court rulings.</p>\n<p>These decisions do not, on their own, end all debates over construction and use on Sedef Island. However, they are regarded as important legal decisions emphasizing that the island’s natural areas should be protected in their <a href=\"/en/ekoloji\">ecological integrity</a>, rather than assessed piecemeal.</p>\n<p>The new conservation zoning plans will need to take these court rulings and Sedef Island’s characteristics as a natural protected area into account.</p>\n<p><strong>Source:</strong> Union of Chambers of Turkish Engineers and Architects, Istanbul Metropolitan Branch of the Chamber of Architects.</p>"
+      },
+      "categories": {
+        "tr": [
+          "Sedef Adası ve Tarihi",
+          "Güncel Gelişmeler"
+        ],
+        "en": [
+          "Sedef Island and Its History",
+          "Current Developments"
+        ]
+      },
+      "publishedAt": "2026-09-29T00:00:00.000Z",
+      "type": "PAGE",
+      "isSimulated": false
     }
   ],
   "galleries": {

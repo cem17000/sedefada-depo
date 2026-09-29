@@ -19,6 +19,7 @@ import { englishNewspaperClipping } from './data/englishNewspaperClipping';
 // Route mapping for clean URLs
 const ROUTE_MAP: Record<string, string> = {
   'sedef-adasi-ve-tarihi': 'sedefada_tarihi',
+  'guncel-gelismeler': 'guncel_gelismeler',
   'anilar': 'anilar',
   'ekoloji': 'ekoloji',
   'videolar': 'videolar',
@@ -28,6 +29,7 @@ const ROUTE_MAP: Record<string, string> = {
   'cesitli-iletisim-bilgisi': 'iletisim_bilgileri',
   // English routes
   'en/sedef-adasi-ve-tarihi': 'sedefada_tarihi',
+  'en/guncel-gelismeler': 'guncel_gelismeler',
   'en/anilar': 'anilar',
   'en/ekoloji': 'ekoloji',
   'en/videolar': 'videolar',
@@ -40,6 +42,7 @@ const ROUTE_MAP: Record<string, string> = {
 // Reverse mapping for URL generation
 const REVERSE_ROUTE_MAP: Record<string, string> = {
   'sedefada_tarihi': 'sedef-adasi-ve-tarihi',
+  'guncel_gelismeler': 'guncel-gelismeler',
   'anilar': 'anilar',
   'ekoloji': 'ekoloji',
   'videolar': 'videolar',
@@ -56,6 +59,12 @@ const PAGE_METADATA: Record<string, { title: string; description: string; schema
     description: 'Sedef Adası, İstanbul Prens Adaları\'nın en küçük ve en doğusundaki ada. Bizans döneminden günümüze tarihçesi, doğal güzellikleri ve coğrafi özellikleri hakkında kapsamlı bilgi.',
     schemaType: 'Place',
     keywords: ['Sedef Adası', 'Prens Adaları', 'İstanbul adaları', 'Terebinthos', 'Bizans manastırı', 'ada tarihi']
+  },
+  'guncel_gelismeler': {
+    title: 'Güncel Gelişmeler - Sedef Adası Haberleri ve İmar Planları',
+    description: 'Sedef Adası ile ilgili güncel haberler, imar planı çalışmaları ve kamu kurumlarının önemli açıklamaları.',
+    schemaType: 'BlogPosting',
+    keywords: ['Sedef Adası güncel gelişmeler', 'Sedef Adası imar planı', 'Adalar koruma planı']
   },
   'anilar': {
     title: 'Anılar - Sedef Adası Hatıraları ve Ada Hayatı',
@@ -720,7 +729,7 @@ function AppContent() {
             content={post.id === 'ulasim_tarife'
               ? `${post.content}\n<div style="margin-top:2rem;"><img src="/ada_tarifesi_2027.png" alt="${lang === 'tr' ? 'Şehir Hatları Büyükada - Sedef Adası akşam tarifesi' : 'City Lines Buyukada - Sedef Island evening timetable'}" style="width:100%;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.10);" /></div>`
               : post.content}
-            contentClassName={post.id === 'anilar' ? 'memories-content' : undefined}
+            contentClassName={post.id === 'anilar' ? 'memories-content' : post.id === 'guncel_gelismeler' ? 'current-developments-content' : undefined}
             publishedAt={post.publishedAt}
             categories={post.categories}
             type={post.type as 'POST' | 'PAGE'}
@@ -764,6 +773,7 @@ function AppContent() {
             <header className="mb-2">
               <h1 className="text-2xl md:text-3xl font-bold text-sedef-primary">
                 {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? '🐚 Sedef Adası ve Tarihi' : '🐚 Sedef Island and Its History')}
+                {activeTitle === 'guncel_gelismeler' && (lang === 'tr' ? 'Güncel Gelişmeler' : 'Current Developments')}
                 {activeTitle === 'anilar' && (lang === 'tr' ? 'Sedef Adası Anıları' : 'Sedef Island Memories')}
                 {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Sedef Adası Ekolojisi' : 'Ecology of Sedef Island')}
                 {activeTitle === 'videolar' && (lang === 'tr' ? 'Sedef Adası Videoları' : 'Sedef Island Videos')}
@@ -783,6 +793,7 @@ function AppContent() {
                   <li className="text-sedef-accent/40">/</li>
                   <li className="text-sedef-primary font-medium">
                     {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? 'Tarihçe' : 'History')}
+                    {activeTitle === 'guncel_gelismeler' && (lang === 'tr' ? 'Güncel Gelişmeler' : 'Current Developments')}
                     {activeTitle === 'anilar' && (lang === 'tr' ? 'Anılar' : 'Memories')}
                     {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Ekoloji' : 'Ecology')}
                     {activeTitle === 'videolar' && (lang === 'tr' ? 'Videolar' : 'Videos')}

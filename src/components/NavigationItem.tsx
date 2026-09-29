@@ -58,6 +58,7 @@ const NAV_CONFIG = (content.navItems as NavConfigSource[])
 
 const NAV_DISPLAY_NAME: Record<string, keyof Translations> = {
   sedefada_tarihi: 'navHakkinda',
+  guncel_gelismeler: 'navGuncelGelismeler',
   anilar: 'navYerlesim',
   ekoloji: 'navEkoloji',
   videolar: 'navFilmler',
@@ -69,6 +70,7 @@ const NAV_DISPLAY_NAME: Record<string, keyof Translations> = {
 
 const NAV_ROUTES: Record<string, string> = {
   sedefada_tarihi: '/sedef-adasi-ve-tarihi',
+  guncel_gelismeler: '/guncel-gelismeler',
   anilar: '/anilar',
   ekoloji: '/ekoloji',
   videolar: '/videolar',

@@ -79,7 +79,8 @@ export function BlogCard({
                    [&_br]:block [&_br]:my-6
                    prose-p:my-0 prose-headings:my-0
                    [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-8 [&_h3]:mb-3
-                   [&_h4]:text-base [&_h4]:font-medium [&_h4]:mt-6 [&_h4]:mb-2 ${contentClassName}`}
+                   [&_h4]:text-base [&_h4]:font-medium [&_h4]:mt-6 [&_h4]:mb-2
+                   ${contentClassName === 'current-developments-content' ? '[&_h2]:text-2xl md:[&_h2]:text-3xl [&_h3]:text-xl md:[&_h3]:text-2xl' : ''} ${contentClassName}`}
         dangerouslySetInnerHTML={{ __html: renderedContent }}
       />
     </article>

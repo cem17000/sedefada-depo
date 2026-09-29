@@ -14,6 +14,7 @@ export const translations = {
     // Navigation labels
     navSedefAdasi: 'Sedef Adası',
     navHakkinda: 'Sedef Adası ve Tarihi',
+    navGuncelGelismeler: 'Güncel Gelişmeler',
     navYerlesim: 'Anılar',
     navEkoloji: 'Ekoloji',
     navFilmler: 'Videolar',
@@ -185,6 +186,7 @@ export const translations = {
     heroDesc: 'Island life woven with seagulls, the sea, and unforgettable memories...',
     navSedefAdasi: 'Sedef Island',
     navHakkinda: 'Sedef Island\'s History',
+    navGuncelGelismeler: 'Current Developments',
     navYerlesim: 'Memories',
     navEkoloji: 'Ecology',
     navFilmler: 'Videos',

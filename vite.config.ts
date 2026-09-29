@@ -28,6 +28,10 @@ const STATIC_PAGE_METADATA: Record<string, { title: string; description: string 
     title: "Sedef Adası Tarihi - İstanbul'un Gizli Cenneti | sedefada.com",
     description: "Sedef Adası, İstanbul Prens Adaları'nın en küçük ve en doğusundaki ada. Bizans döneminden günümüze tarihçesi, Terebinthos, manastır kalıntıları ve doğal güzellikleri keşfedin.",
   },
+  guncel_gelismeler: {
+    title: 'Güncel Gelişmeler - Sedef Adası Haberleri ve İmar Planları | sedefada.com',
+    description: 'Sedef Adası ile ilgili güncel haberler, imar planı çalışmaları ve kamu kurumlarının önemli açıklamaları.',
+  },
   anilar: {
     title: 'Sedef Adası Anıları - Ada Hayatı ve Hatıralar | sedefada.com',
     description: "Sedef Adası sakinlerinin anıları, Mahama lokantası, Suna Giritli'nin Kafkas pilavı partileri ve ada yaşamının unutulmaz hikayeleri. Duygusal bir ada yolculuğu.",
@@ -52,6 +56,7 @@ const STATIC_PAGE_METADATA: Record<string, { title: string; description: string 
 
 const STATIC_PAGES = [
   { route: 'sedef-adasi-ve-tarihi', itemId: 'sedefada_tarihi', heading: 'Sedef Adası ve Tarihi' },
+  { route: 'guncel-gelismeler', itemId: 'guncel_gelismeler', heading: 'Güncel Gelişmeler' },
   { route: 'anilar', itemId: 'anilar', heading: 'Sedef Adası Anıları' },
   { route: 'kis-baskadir', itemId: 'kis_baskadir', heading: "Sedef Adası'nda Kış" },
   { route: 'ulasim-tarifesi', itemId: 'ulasim_tarife', heading: 'Sedef Adası Ulaşım Rehberi' },
