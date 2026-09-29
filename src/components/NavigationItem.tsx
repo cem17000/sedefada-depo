@@ -4,7 +4,7 @@ import { BookOpen, Film, Snowflake, Home, Anchor, HelpCircle, Ship, Phone, Globe
 import { WeatherWidget } from './WeatherWidget';
 import { useLanguage } from '../lib/useLanguage';
 import type { Translations } from '../lib/i18n';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export interface NavItem {
   id: string;
@@ -84,12 +84,15 @@ type ConfigItemType = typeof NAV_CONFIG[number];
 
 export function Navigation({ onNavigate, activeItem, renderMobileContent }: NavigationProps) {
   const { t, lang } = useLanguage();
+  const location = useLocation();
   const [activeId, setActiveId] = useState<string>('sedefada_tarihi');
 
   useEffect(() => {
-    handleItemClick(NAV_CONFIG[0]);
+    if (location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/') {
+      handleItemClick(NAV_CONFIG[0]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.pathname]);
 
   // activeItem prop değiştiğinde activeId'yi senkronize et (mobil uyumluluk için)
   useEffect(() => {
