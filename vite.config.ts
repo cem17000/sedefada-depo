@@ -1,12 +1,179 @@
-import { defineConfig } from 'vite';
+import { readFileSync } from 'node:fs';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+
+interface StaticNavItem {
+  id: string;
+  type: 'blog' | 'post';
+  blogSlug: string;
+  postId?: string;
+  excludeIds?: string[];
+}
+
+interface StaticPost {
+  id: string;
+  blogSlug: string;
+  titles: { tr: string };
+  contents: { tr: string };
+  publishedAt: string;
+}
+
+const staticContent = JSON.parse(
+  readFileSync(new URL('./src/data/content.json', import.meta.url), 'utf8'),
+) as { navItems: StaticNavItem[]; posts: StaticPost[] };
+
+const STATIC_PAGE_METADATA: Record<string, { title: string; description: string }> = {
+  sedefada_tarihi: {
+    title: "Sedef Adası Tarihi - İstanbul'un Gizli Cenneti | sedefada.com",
+    description: "Sedef Adası, İstanbul Prens Adaları'nın en küçük ve en doğusundaki ada. Bizans döneminden günümüze tarihçesi, Terebinthos, manastır kalıntıları ve doğal güzellikleri keşfedin.",
+  },
+  anilar: {
+    title: 'Sedef Adası Anıları - Ada Hayatı ve Hatıralar | sedefada.com',
+    description: "Sedef Adası sakinlerinin anıları, Mahama lokantası, Suna Giritli'nin Kafkas pilavı partileri ve ada yaşamının unutulmaz hikayeleri. Duygusal bir ada yolculuğu.",
+  },
+  kis_baskadir: {
+    title: "Sedef Adası'nda Kış - Lodos, Kar ve Sessizlik | sedefada.com",
+    description: "Sedef Adası'nda kış mevsimi, lodos fırtınaları, kar manzaraları ve kışın adada kalmanın eşsiz deneyimi. Yaz kalabalıklarından uzak, sessiz ve huzurlu ada yaşamı.",
+  },
+  ulasim_tarife: {
+    title: 'Sedef Adası Ulaşım Rehberi 2026 - Nasıl Gidilir? | sedefada.com',
+    description: "Sedef Adası'na Kartal'dan metro ile ulaşım, güncel tekne ve vapur tarifeleri, İBB Deniz Taksi bilgileri. İstanbul'un her yerinden Kartal'a metro rota rehberi.",
+  },
+  videolar: {
+    title: 'Sedef Adası Videoları - Belgesel ve Tarihi Görüntüler | sedefada.com',
+    description: "Sedef Adası belgeseli, tarihi videolar ve ada yaşamından görüntüler. Adamızın geçmişine, doğal güzelliklerine ve kültürüne video yolculuğu yapın.",
+  },
+  web: {
+    title: 'Sedef Adası Canlı Kamera - Marmara Deniz Manzarası | sedefada.com',
+    description: "Dragos'tan Sedef Adası canlı kamera görüntüleri. Kartal-Sedef Adası rotasındaki deniz ve hava koşullarını gerçek zamanlı izleyin. Marmara Denizi ve Prens Adaları manzarası.",
+  },
+};
+
+const STATIC_PAGES = [
+  { route: 'sedef-adasi-ve-tarihi', itemId: 'sedefada_tarihi', heading: 'Sedef Adası ve Tarihi' },
+  { route: 'anilar', itemId: 'anilar', heading: 'Sedef Adası Anıları' },
+  { route: 'kis-baskadir', itemId: 'kis_baskadir', heading: "Sedef Adası'nda Kış" },
+  { route: 'ulasim-tarifesi', itemId: 'ulasim_tarife', heading: 'Sedef Adası Ulaşım Rehberi' },
+  { route: 'videolar', itemId: 'videolar', heading: 'Sedef Adası Videoları' },
+  { route: 'web-canli', itemId: 'web', heading: 'Canlı Marmara Görüntüsü' },
+] as const;
+
+const HIDE_POST_TITLE_FOR = new Set(['sedefada_tarihi', 'videolar', 'kis_baskadir', 'ulasim_tarife']);
+
+function getStaticPosts(itemId: string) {
+  const item = staticContent.navItems.find((navItem) => navItem.id === itemId);
+  if (!item) return [];
+
+  return staticContent.posts
+    .filter((post) => post.blogSlug === item.blogSlug)
+    .filter((post) => !item.excludeIds?.includes(post.id))
+    .filter((post) => item.type !== 'post' || post.id === item.postId)
+    .sort((firstPost, secondPost) => Date.parse(secondPost.publishedAt) - Date.parse(firstPost.publishedAt));
+}
+
+function renderStaticArticles(itemId: string) {
+  return getStaticPosts(itemId).map((post) => {
+    const content = post.id === 'ulasim_tarife'
+      ? `${post.contents.tr.replace('/t1.png', '/t1.png?v=2026-09-07')}\n<div style="margin-top:2rem;"><img src="/ada_tarifesi_2027.png" alt="Şehir Hatları Büyükada - Sedef Adası akşam tarifesi" style="width:100%;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.10);" /></div>`
+      : post.contents.tr;
+    const title = HIDE_POST_TITLE_FOR.has(post.id)
+      ? ''
+      : `<h2>${post.titles.tr}</h2>`;
+    const contentClass = post.id === 'anilar' ? ' memories-content' : '';
+
+    return `<article class="blog-card seo-static-card">${title}<div class="blog-content${contentClass}">${content}</div></article>`;
+  }).join('\n');
+}
+
+function renderStaticNavigation() {
+  return STATIC_PAGES.map((page) => `<a href="/${page.route}">${page.heading}</a>`).join('\n');
+}
+
+function renderStaticPage(
+  route: string,
+  itemId: string,
+  heading: string,
+  stylesheet: string | undefined,
+  entryScript: string | undefined,
+) {
+  const metadata = STATIC_PAGE_METADATA[itemId];
+  const canonicalUrl = `https://sedefada.com/${route}`;
+  const stylesheetLink = stylesheet ? `<link rel="stylesheet" href="/${stylesheet}" />` : '';
+  const script = entryScript ? `<script type="module" crossorigin src="/${entryScript}"></script>` : '';
+
+  return `<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="${metadata.description}" />
+    <title>${metadata.title}</title>
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:title" content="${metadata.title}" />
+    <meta property="og:description" content="${metadata.description}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    ${stylesheetLink}
+    <style>
+      .seo-static-page { max-width: 76rem; margin: 0 auto; padding: 6rem 1.5rem 3rem; }
+      .seo-static-header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 2rem; }
+      .seo-static-header a, .seo-static-nav a { color: #00e5ff; }
+      .seo-static-nav { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; margin: 1rem 0 2rem; }
+      .seo-static-card { padding: 1.5rem; margin-bottom: 1.5rem; }
+      .seo-static-card h2 { margin: 0 0 1rem; font-size: 1.5rem; }
+      @media (max-width: 767px) { .seo-static-page { padding-top: 2rem; } .seo-static-header { align-items: flex-start; flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <main class="seo-static-page">
+        <header class="seo-static-header"><a href="/">sedefada.com</a><a href="/">Ana Sayfa</a></header>
+        <nav class="seo-static-nav" aria-label="Site bölümleri">
+          ${renderStaticNavigation()}
+        </nav>
+        <h1>${heading}</h1>
+        ${renderStaticArticles(itemId)}
+      </main>
+    </div>
+    ${script}
+  </body>
+</html>`;
+}
+
+function staticSeoPages(): Plugin {
+  return {
+    name: 'static-turkish-seo-pages',
+    apply: 'build',
+    generateBundle(_, bundle) {
+      const stylesheet = Object.values(bundle).find(
+        (output) => output.type === 'asset' && output.fileName.endsWith('.css'),
+      )?.fileName;
+      const entryScript = Object.values(bundle).find(
+        (output) => output.type === 'chunk' && output.isEntry,
+      )?.fileName;
+
+      for (const page of STATIC_PAGES) {
+        this.emitFile({
+          type: 'asset',
+          fileName: `${page.route}/index.html`,
+          source: renderStaticPage(page.route, page.itemId, page.heading, stylesheet, entryScript),
+        });
+      }
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
   plugins: [
     react(),
+    staticSeoPages(),
     // Image optimizasyonu: WebP/AVIF formatlarına dönüştürme ve sıkıştırma
     ViteImageOptimizer({
       // PNG optimizasyonu
