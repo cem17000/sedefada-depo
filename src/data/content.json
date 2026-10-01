@@ -2,14 +2,10 @@
   "navItems": [
     {
       "id": "sedefada_tarihi",
-      "type": "blog",
+      "type": "post",
       "icon": "fa-solid fa-gem",
       "blogSlug": "sedef-adasi",
-      "excludeIds": [
-        "ulasim_tarife",
-        "iletisim_bilgileri",
-        "web"
-      ]
+      "postId": "sedefada_tarihi"
     },
     {
       "id": "guncel_gelismeler",
