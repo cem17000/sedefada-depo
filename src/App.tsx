@@ -11,6 +11,7 @@ import { MarmarayWidget } from './components/MarmarayWidget';
 import { MetroRouteFinder } from './components/MetroRouteFinder';
 import { FAQSection } from './components/FAQSection';
 import { EcologyPage } from './components/EcologyPage';
+import { LiveCamera } from './components/LiveCamera';
 import { useLanguage } from './lib/useLanguage';
 import { useSEO, getPageSEO } from './lib/useSEO';
 import content from './data/content.json';
@@ -755,6 +756,10 @@ function AppContent() {
   // 404 sayfası göster
   if (isNotFound) {
     return <NotFoundPage />;
+  }
+
+  if (activeItem?.id === 'web') {
+    return <LiveCamera />;
   }
 
   return (
