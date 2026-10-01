@@ -27,6 +27,7 @@ const ROUTE_MAP: Record<string, string> = {
   'kis-baskadir': 'kis_baskadir',
   'ulasim-tarifesi': 'ulasim_tarife',
   'web-canli': 'web',
+  'web-canli/kamera': 'web',
   'cesitli-iletisim-bilgisi': 'iletisim_bilgileri',
   // English routes
   'en/sedef-adasi-ve-tarihi': 'sedefada_tarihi',
@@ -37,6 +38,7 @@ const ROUTE_MAP: Record<string, string> = {
   'en/kis-baskadir': 'kis_baskadir',
   'en/ulasim-tarifesi': 'ulasim_tarife',
   'en/web-canli': 'web',
+  'en/web-canli/kamera': 'web',
   'en/cesitli-iletisim-bilgisi': 'iletisim_bilgileri',
 };
 
@@ -519,6 +521,7 @@ function AppContent() {
   const { t, lang } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
+  const isCameraView = location.pathname === '/web-canli/kamera' || location.pathname === '/en/web-canli/kamera';
   const [posts, setPosts] = useState<Array<{ id: string; blogSlug: string; title: string; content: string; publishedAt: string; categories: string[]; type: string; isSimulated: boolean }>>([]);
   const [images, setImages] = useState<{ url: string; title: string }[]>([]);
   const [viewMode, setViewMode] = useState<'posts' | 'gallery'>('posts');
@@ -758,8 +761,12 @@ function AppContent() {
     return <NotFoundPage />;
   }
 
-  if (activeItem?.id === 'web') {
-    return <LiveCamera />;
+  if (isCameraView) {
+    return (
+      <LiveCamera
+        onClose={() => navigate(location.pathname.startsWith('/en/') ? '/en/web-canli' : '/web-canli')}
+      />
+    );
   }
 
   return (
