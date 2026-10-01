@@ -85,14 +85,25 @@ type ConfigItemType = typeof NAV_CONFIG[number];
 export function Navigation({ onNavigate, activeItem, renderMobileContent }: NavigationProps) {
   const { t, lang } = useLanguage();
   const location = useLocation();
-  const [activeId, setActiveId] = useState<string>('sedefada_tarihi');
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches);
+  const [activeId, setActiveId] = useState<string>(() => (
+    window.matchMedia('(max-width: 767px)').matches ? '' : 'sedefada_tarihi'
+  ));
 
   useEffect(() => {
-    if (location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/') {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateViewport = () => setIsMobile(mediaQuery.matches);
+
+    mediaQuery.addEventListener('change', updateViewport);
+    return () => mediaQuery.removeEventListener('change', updateViewport);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile && (location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/')) {
       handleItemClick(NAV_CONFIG[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [isMobile, location.pathname]);
 
   // activeItem prop değiştiğinde activeId'yi senkronize et (mobil uyumluluk için)
   useEffect(() => {
@@ -115,7 +126,7 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent }: Navi
   };
 
   const handleItemClick = (config: ConfigItemType) => {
-    if (activeId === config.id) {
+    if (isMobile && activeId === config.id) {
       setActiveId('');
       onNavigate({} as NavItem);
       return;
@@ -152,7 +163,7 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent }: Navi
                 <Link
                   to={lang === 'en' ? `/en${NAV_ROUTES[config.id]}` : NAV_ROUTES[config.id]}
                   onClick={(event) => {
-                    if (isActive) event.preventDefault();
+                    if (isMobile && isActive) event.preventDefault();
                     handleItemClick(config);
                   }}
                   className={`nav-item w-full ${isActive ? 'active border-sedef-accent bg-sedef-card-bg shadow-lg translate-x-1' : ''}`}
