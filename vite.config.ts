@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import { getPageSEO } from './src/lib/useSEO';
 
 interface StaticNavItem {
   id: string;
@@ -23,45 +24,17 @@ const staticContent = JSON.parse(
   readFileSync(new URL('./src/data/content.json', import.meta.url), 'utf8'),
 ) as { navItems: StaticNavItem[]; posts: StaticPost[] };
 
-const STATIC_PAGE_METADATA: Record<string, { title: string; description: string }> = {
-  sedefada_tarihi: {
-    title: "Sedef Adası Tarihi - İstanbul'un Gizli Cenneti | sedefada.com",
-    description: "Sedef Adası, İstanbul Prens Adaları'nın en küçük ve en doğusundaki ada. Bizans döneminden günümüze tarihçesi, Terebinthos, manastır kalıntıları ve doğal güzellikleri keşfedin.",
-  },
-  guncel_gelismeler: {
-    title: 'Güncel Gelişmeler - Sedef Adası Haberleri ve İmar Planları | sedefada.com',
-    description: 'Sedef Adası ile ilgili güncel haberler, imar planı çalışmaları ve kamu kurumlarının önemli açıklamaları.',
-  },
-  anilar: {
-    title: 'Sedef Adası Anıları - Ada Hayatı ve Hatıralar | sedefada.com',
-    description: "Sedef Adası sakinlerinin anıları, Mahama lokantası, Suna Giritli'nin Kafkas pilavı partileri ve ada yaşamının unutulmaz hikayeleri. Duygusal bir ada yolculuğu.",
-  },
-  kis_baskadir: {
-    title: "Sedef Adası'nda Kış - Lodos, Kar ve Sessizlik | sedefada.com",
-    description: "Sedef Adası'nda kış mevsimi, lodos fırtınaları, kar manzaraları ve kışın adada kalmanın eşsiz deneyimi. Yaz kalabalıklarından uzak, sessiz ve huzurlu ada yaşamı.",
-  },
-  ulasim_tarife: {
-    title: 'Sedef Adası Ulaşım Rehberi 2026 - Nasıl Gidilir? | sedefada.com',
-    description: "Sedef Adası'na Kartal'dan metro ile ulaşım, güncel tekne ve vapur tarifeleri, İBB Deniz Taksi bilgileri. İstanbul'un her yerinden Kartal'a metro rota rehberi.",
-  },
-  videolar: {
-    title: 'Sedef Adası Videoları - Belgesel ve Tarihi Görüntüler | sedefada.com',
-    description: "Sedef Adası belgeseli, tarihi videolar ve ada yaşamından görüntüler. Adamızın geçmişine, doğal güzelliklerine ve kültürüne video yolculuğu yapın.",
-  },
-  web: {
-    title: 'Sedef Adası Canlı Kamera - Marmara Deniz Manzarası | sedefada.com',
-    description: "Dragos'tan Sedef Adası canlı kamera görüntüleri. Kartal-Sedef Adası rotasındaki deniz ve hava koşullarını gerçek zamanlı izleyin. Marmara Denizi ve Prens Adaları manzarası.",
-  },
-};
-
 const STATIC_PAGES = [
   { route: 'sedef-adasi-ve-tarihi', itemId: 'sedefada_tarihi', heading: 'Sedef Adası ve Tarihi' },
   { route: 'guncel-gelismeler', itemId: 'guncel_gelismeler', heading: 'Güncel Gelişmeler' },
   { route: 'anilar', itemId: 'anilar', heading: 'Sedef Adası Anıları' },
+  { route: 'ekoloji', itemId: 'ekoloji', heading: 'Sedef Adası Ekolojisi' },
   { route: 'kis-baskadir', itemId: 'kis_baskadir', heading: "Sedef Adası'nda Kış" },
   { route: 'ulasim-tarifesi', itemId: 'ulasim_tarife', heading: 'Sedef Adası Ulaşım Rehberi' },
   { route: 'videolar', itemId: 'videolar', heading: 'Sedef Adası Videoları' },
   { route: 'web-canli', itemId: 'web', heading: 'Canlı Marmara Görüntüsü' },
+  { route: 'web-canli/kamera', itemId: 'web', heading: 'Canlı Marmara Görüntüsü' },
+  { route: 'cesitli-iletisim-bilgisi', itemId: 'iletisim_bilgileri', heading: 'Faydalı Telefonlar' },
 ] as const;
 
 const HIDE_POST_TITLE_FOR = new Set(['sedefada_tarihi', 'videolar', 'kis_baskadir', 'ulasim_tarife']);
@@ -95,16 +68,17 @@ function renderStaticPage(
   route: string,
   itemId: string,
   heading: string,
+  lang: 'tr' | 'en',
   stylesheet: string | undefined,
   entryScript: string | undefined,
 ) {
-  const metadata = STATIC_PAGE_METADATA[itemId];
-  const canonicalUrl = `https://sedefada.com/${route}`;
+  const metadata = getPageSEO(itemId, lang);
+  const canonicalUrl = metadata.canonicalUrl!;
   const stylesheetLink = stylesheet ? `<link rel="stylesheet" href="/${stylesheet}" />` : '';
   const script = entryScript ? `<script type="module" crossorigin src="/${entryScript}"></script>` : '';
 
   return `<!doctype html>
-<html lang="tr">
+<html lang="${lang}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -156,11 +130,14 @@ function staticSeoPages(): Plugin {
       )?.fileName;
 
       for (const page of STATIC_PAGES) {
-        this.emitFile({
-          type: 'asset',
-          fileName: `${page.route}/index.html`,
-          source: renderStaticPage(page.route, page.itemId, page.heading, stylesheet, entryScript),
-        });
+        for (const lang of ['tr', 'en'] as const) {
+          const localizedRoute = lang === 'tr' ? page.route : `en/${page.route}`;
+          this.emitFile({
+            type: 'asset',
+            fileName: `${localizedRoute}/index.html`,
+            source: renderStaticPage(localizedRoute, page.itemId, page.heading, lang, stylesheet, entryScript),
+          });
+        }
       }
     },
   };

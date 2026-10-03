@@ -124,6 +124,17 @@ export function getPageSEO(
         ? ['Sedef Adası', 'Prens Adaları', 'İstanbul adaları', 'Terebinthos', 'Bizans manastırı', 'ada tarihi', 'Sedef Adası gezisi']
         : ['Sedef Island', 'Princes Islands', 'Istanbul islands', 'Terebinthos', 'Byzantine monastery', 'island history', 'Sedef Island tour']
     },
+    'guncel_gelismeler': {
+      title: lang === 'tr'
+        ? 'Güncel Gelişmeler - Sedef Adası Haberleri ve İmar Planları | sedefada.com'
+        : 'Current Developments - Sedef Island News and Planning | sedefada.com',
+      description: lang === 'tr'
+        ? 'Sedef Adası ile ilgili güncel haberler, imar planı çalışmaları ve kamu kurumlarının önemli açıklamaları.'
+        : 'Current news about Sedef Island, zoning plan studies, and important announcements from public institutions.',
+      keywords: lang === 'tr'
+        ? ['Sedef Adası güncel gelişmeler', 'Sedef Adası imar planı', 'Adalar koruma planı']
+        : ['Sedef Island current developments', 'Sedef Island zoning plan', 'Princes Islands conservation plan']
+    },
     'anilar': {
       title: lang === 'tr'
         ? 'Sedef Adası Anıları - Ada Hayatı ve Hatıralar | sedefada.com'
