@@ -886,10 +886,13 @@ function App() {
 function AppWrapper() {
   const location = useLocation();
   const { lang } = useLanguage();
+  const normalizedPathname = location.pathname === '/'
+    ? '/'
+    : location.pathname.replace(/\/+$/, '');
   
   // URL'den aktif sayfa ID'sini hesapla
   const getActiveItemId = (): string => {
-    let path = location.pathname.slice(1);
+    let path = normalizedPathname.slice(1);
     // /en/ prefix'ini kaldır
     if (path.startsWith('en/')) {
       path = path.substring(3);
@@ -906,10 +909,10 @@ function AppWrapper() {
 
   // 404 sayfası için noindex SEO verisi
   const isNotFoundPage = !getActiveItemId() && 
-    location.pathname !== '/' && 
-    location.pathname !== '' && 
-    location.pathname !== '/en' &&
-    location.pathname !== 'en';
+    normalizedPathname !== '/' && 
+    normalizedPathname !== '' && 
+    normalizedPathname !== '/en' &&
+    normalizedPathname !== 'en';
 
   // SEO hook'unu kullan - her sayfa değiştiğinde meta tag'ler güncellenecek
   // 404 sayfalarında noindex gönder
