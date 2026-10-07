@@ -241,6 +241,7 @@ export function getPageSEO(
   // URL mapping for canonical URLs
   const urlMap: Record<string, string> = {
     'sedefada_tarihi': 'sedef-adasi-ve-tarihi',
+    'guncel_gelismeler': 'guncel-gelismeler',
     'ulasim_tarife': 'ulasim-tarifesi',
     'kis_baskadir': 'kis-baskadir',
     'iletisim_bilgileri': 'cesitli-iletisim-bilgisi',
@@ -251,8 +252,8 @@ export function getPageSEO(
   };
 
   const routePath = urlMap[pageId] || pageId;
-  const turkishUrl = `${BASE_URL}/${routePath}`;
-  const englishUrl = `${BASE_URL}/en/${routePath}`;
+  const turkishUrl = `${BASE_URL}/${routePath}/`;
+  const englishUrl = `${BASE_URL}/en/${routePath}/`;
 
   return {
     title: page.title,

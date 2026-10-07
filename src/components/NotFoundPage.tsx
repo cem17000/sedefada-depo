@@ -114,14 +114,14 @@ export function NotFoundPage() {
           {/* Alternatif navigasyon linkleri */}
           <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-sedef-secondary/70">
             <button 
-              onClick={() => navigate('/sedef-adasi-ve-tarihi')}
+              onClick={() => navigate('/sedef-adasi-ve-tarihi/')}
               className="hover:text-sedef-accent transition-colors underline underline-offset-4"
             >
               {t.navHakkinda}
             </button>
             <span className="text-sedef-accent/30">•</span>
             <button 
-              onClick={() => navigate('/ulasim-tarifesi')}
+              onClick={() => navigate('/ulasim-tarifesi/')}
               className="hover:text-sedef-accent transition-colors underline underline-offset-4"
             >
               {t.navUlasim}

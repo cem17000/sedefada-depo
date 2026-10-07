@@ -46,17 +46,17 @@ export function Header() {
     // Yeni dil için URL oluştur
     if (newLang === 'en') {
       // İngilizce için /en/ prefix'i ekle
-      const newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
+      const newPath = currentPath === '/' ? '/en/' : `/en${currentPath}/`;
       navigate(newPath);
     } else {
       // Türkçe için prefix'siz URL
-      navigate(currentPath);
+      navigate(currentPath === '/' ? '/' : `${currentPath}/`);
     }
   };
 
   return (
     <header className="fixed top-0 left-0 right-0 h-[70px] bg-sedef-bg/85 backdrop-blur-lg border-b border-sedef-border z-50 flex justify-between items-center px-4 md:px-10 transition-all duration-300">
-      <a href={lang === 'en' ? '/en' : '/'} className="flex items-center gap-3 no-underline text-sedef-primary">
+      <a href={lang === 'en' ? '/en/' : '/'} className="flex items-center gap-3 no-underline text-sedef-primary">
         <div
           className="w-[140px] h-[58px] overflow-hidden flex items-center justify-center"
           style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)' }}

@@ -38,6 +38,7 @@ const STATIC_PAGES = [
 ] as const;
 
 const HIDE_POST_TITLE_FOR = new Set(['sedefada_tarihi', 'videolar', 'kis_baskadir', 'ulasim_tarife']);
+const INTERNAL_PAGE_LINK_PATTERN = /(href="\/(?:en\/)?(?:sedef-adasi-ve-tarihi|guncel-gelismeler|anilar|ekoloji|videolar|kis-baskadir|ulasim-tarifesi|web-canli(?:\/kamera)?|cesitli-iletisim-bilgisi))(?=")/g;
 
 function getStaticPosts(itemId: string) {
   const item = staticContent.navItems.find((navItem) => navItem.id === itemId);
@@ -55,12 +56,13 @@ function renderStaticArticles(itemId: string) {
     const content = post.id === 'ulasim_tarife'
       ? `${post.contents.tr.replace('/t1.png', '/t1.png?v=2026-09-07')}\n<div style="margin-top:2rem;"><img src="/ada_tarifesi_2027.png" alt="Şehir Hatları Büyükada - Sedef Adası akşam tarifesi" style="width:100%;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.10);" /></div>`
       : post.contents.tr;
+    const normalizedContent = content.replace(INTERNAL_PAGE_LINK_PATTERN, '$1/');
     const title = HIDE_POST_TITLE_FOR.has(post.id)
       ? ''
       : `<h2>${post.titles.tr}</h2>`;
     const contentClass = post.id === 'anilar' ? ' memories-content' : '';
 
-    return `<article class="blog-card seo-static-card">${title}<div class="blog-content${contentClass}">${content}</div></article>`;
+    return `<article class="blog-card seo-static-card">${title}<div class="blog-content${contentClass}">${normalizedContent}</div></article>`;
   }).join('\n');
 }
 
@@ -72,7 +74,15 @@ function renderStaticPage(
   stylesheet: string | undefined,
   entryScript: string | undefined,
 ) {
-  const metadata = getPageSEO(itemId, lang);
+  const turkishRoute = route.startsWith('en/') ? route.slice(3) : route;
+  const metadata = getPageSEO(itemId, lang, {
+    canonicalUrl: `https://sedefada.com/${route}/`,
+    alternateUrls: {
+      tr: `https://sedefada.com/${turkishRoute}/`,
+      en: `https://sedefada.com/en/${turkishRoute}/`,
+      default: `https://sedefada.com/${turkishRoute}/`,
+    },
+  });
   const canonicalUrl = metadata.canonicalUrl!;
   const stylesheetLink = stylesheet ? `<link rel="stylesheet" href="/${stylesheet}" />` : '';
   const script = entryScript ? `<script type="module" crossorigin src="/${entryScript}"></script>` : '';
@@ -86,6 +96,9 @@ function renderStaticPage(
     <meta name="description" content="${metadata.description}" />
     <title>${metadata.title}</title>
     <link rel="canonical" href="${canonicalUrl}" />
+    <link rel="alternate" hreflang="tr" href="${metadata.alternateUrls!.tr}" />
+    <link rel="alternate" hreflang="en" href="${metadata.alternateUrls!.en}" />
+    <link rel="alternate" hreflang="x-default" href="${metadata.alternateUrls!.default}" />
     <meta property="og:title" content="${metadata.title}" />
     <meta property="og:description" content="${metadata.description}" />
     <meta property="og:type" content="website" />

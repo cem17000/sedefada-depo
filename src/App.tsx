@@ -118,6 +118,12 @@ const HOME_DESCRIPTIONS = {
   en: 'A comprehensive guide and archive about Sedef Island, including its history, nature, transport, architecture, memories, historic photographs, maps and island life.',
 };
 
+const INTERNAL_PAGE_LINK_PATTERN = /(href="\/(?:en\/)?(?:sedef-adasi-ve-tarihi|guncel-gelismeler|anilar|ekoloji|videolar|kis-baskadir|ulasim-tarifesi|web-canli(?:\/kamera)?|cesitli-iletisim-bilgisi))(?=")/g;
+
+function normalizeInternalPageLinks(content: string | undefined) {
+  return content?.replace(INTERNAL_PAGE_LINK_PATTERN, '$1/');
+}
+
 function generateHomeStructuredData(lang: 'tr' | 'en') {
   const homeUrl = lang === 'tr' ? 'https://sedefada.com/' : 'https://sedefada.com/en/';
   const organizationId = `${homeUrl}#organization`;
@@ -169,8 +175,8 @@ function generateStructuredData(itemId: string, lang: string) {
   const routePath = REVERSE_ROUTE_MAP[itemId] || '';
   const homeUrl = lang === 'tr' ? `${baseUrl}/` : `${baseUrl}/en/`;
   const pageUrl = lang === 'tr'
-    ? `${baseUrl}/${routePath}`
-    : `${baseUrl}/en/${routePath}`;
+    ? `${baseUrl}/${routePath}/`
+    : `${baseUrl}/en/${routePath}/`;
   const currentYear = new Date().getFullYear();
 
   // BreadcrumbList schema
@@ -521,7 +527,7 @@ function AppContent() {
   const { t, lang } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const isCameraView = location.pathname === '/web-canli/kamera' || location.pathname === '/en/web-canli/kamera';
+  const isCameraView = location.pathname === '/web-canli/kamera' || location.pathname === '/web-canli/kamera/' || location.pathname === '/en/web-canli/kamera' || location.pathname === '/en/web-canli/kamera/';
   const [posts, setPosts] = useState<Array<{ id: string; blogSlug: string; title: string; content: string; publishedAt: string; categories: string[]; type: string; isSimulated: boolean }>>([]);
   const [images, setImages] = useState<{ url: string; title: string }[]>([]);
   const [viewMode, setViewMode] = useState<'posts' | 'gallery'>('posts');
@@ -553,7 +559,7 @@ function AppContent() {
     return {
       ...post,
       title: post.titles?.[currentLang] ?? post.titles?.en ?? post.titles?.tr ?? post.title,
-      content: versionedContent ?? post.content,
+      content: normalizeInternalPageLinks(versionedContent ?? post.content),
       categories: post.categories?.[currentLang] ?? post.categories?.en ?? post.categories?.tr ?? post.categories ?? [],
     };
   };
@@ -694,13 +700,13 @@ function AppContent() {
       setActiveTitle('');
       setPosts([]);
       setImages([]);
-      navigate(lang === 'en' ? '/en' : '/');
+      navigate(lang === 'en' ? '/en/' : '/');
       return;
     }
 
     const routePath = REVERSE_ROUTE_MAP[item.id];
     if (routePath) {
-      navigate(lang === 'en' ? `/en/${routePath}` : `/${routePath}`);
+      navigate(lang === 'en' ? `/en/${routePath}/` : `/${routePath}/`);
     }
   };
 
@@ -889,6 +895,15 @@ function AppWrapper() {
   const normalizedPathname = location.pathname === '/'
     ? '/'
     : location.pathname.replace(/\/+$/, '');
+  const isCameraRoute = normalizedPathname === '/web-canli/kamera' || normalizedPathname === '/en/web-canli/kamera';
+  const cameraSeoData = isCameraRoute ? {
+    canonicalUrl: lang === 'tr' ? 'https://sedefada.com/web-canli/kamera/' : 'https://sedefada.com/en/web-canli/kamera/',
+    alternateUrls: {
+      tr: 'https://sedefada.com/web-canli/kamera/',
+      en: 'https://sedefada.com/en/web-canli/kamera/',
+      default: 'https://sedefada.com/web-canli/kamera/',
+    },
+  } : undefined;
   
   // URL'den aktif sayfa ID'sini hesapla
   const getActiveItemId = (): string => {
@@ -920,7 +935,7 @@ function AppWrapper() {
     title: lang === 'tr' ? 'Sayfa Bulunamadı - 404 | sedefada.com' : 'Page Not Found - 404 | sedefada.com',
     description: lang === 'tr' ? 'Aradığınız sayfa bulunamadı.' : 'The page you are looking for could not be found.',
     noIndex: true
-  } : getPageSEO(getActiveItemId(), lang));
+  } : getPageSEO(getActiveItemId(), lang, cameraSeoData));
 
   return <AppContent />;
 }

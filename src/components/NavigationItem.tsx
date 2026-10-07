@@ -69,15 +69,15 @@ const NAV_DISPLAY_NAME: Record<string, keyof Translations> = {
 };
 
 const NAV_ROUTES: Record<string, string> = {
-  sedefada_tarihi: '/sedef-adasi-ve-tarihi',
-  guncel_gelismeler: '/guncel-gelismeler',
-  anilar: '/anilar',
-  ekoloji: '/ekoloji',
-  videolar: '/videolar',
-  kis_baskadir: '/kis-baskadir',
-  ulasim_tarife: '/ulasim-tarifesi',
-  web: '/web-canli',
-  iletisim_bilgileri: '/cesitli-iletisim-bilgisi',
+  sedefada_tarihi: '/sedef-adasi-ve-tarihi/',
+  guncel_gelismeler: '/guncel-gelismeler/',
+  anilar: '/anilar/',
+  ekoloji: '/ekoloji/',
+  videolar: '/videolar/',
+  kis_baskadir: '/kis-baskadir/',
+  ulasim_tarife: '/ulasim-tarifesi/',
+  web: '/web-canli/',
+  iletisim_bilgileri: '/cesitli-iletisim-bilgisi/',
 };
 
 type ConfigItemType = typeof NAV_CONFIG[number];

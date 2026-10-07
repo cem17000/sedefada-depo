@@ -6,17 +6,17 @@ export function Footer() {
 
   // Internal linking için sayfa linkleri
   const footerLinks = lang === 'tr' ? [
-    { href: '/sedef-adasi-ve-tarihi', label: 'Sedef Adası Tarihi' },
-    { href: '/anilar', label: 'Anılar' },
-    { href: '/videolar', label: 'Videolar' },
-    { href: '/ulasim-tarifesi', label: 'Ulaşım Rehberi' },
-    { href: '/kis-baskadir', label: 'Kış Manzaraları' },
+    { href: '/sedef-adasi-ve-tarihi/', label: 'Sedef Adası Tarihi' },
+    { href: '/anilar/', label: 'Anılar' },
+    { href: '/videolar/', label: 'Videolar' },
+    { href: '/ulasim-tarifesi/', label: 'Ulaşım Rehberi' },
+    { href: '/kis-baskadir/', label: 'Kış Manzaraları' },
   ] : [
-    { href: '/sedef-adasi-ve-tarihi', label: 'History of Sedef Island' },
-    { href: '/anilar', label: 'Island Memories' },
-    { href: '/videolar', label: 'Videos' },
-    { href: '/ulasim-tarifesi', label: 'Transportation Guide' },
-    { href: '/kis-baskadir', label: 'Winter Scenes' },
+    { href: '/en/sedef-adasi-ve-tarihi/', label: 'History of Sedef Island' },
+    { href: '/en/anilar/', label: 'Island Memories' },
+    { href: '/en/videolar/', label: 'Videos' },
+    { href: '/en/ulasim-tarifesi/', label: 'Transportation Guide' },
+    { href: '/en/kis-baskadir/', label: 'Winter Scenes' },
   ];
 
   return (
