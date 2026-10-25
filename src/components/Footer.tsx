@@ -1,8 +1,9 @@
 import { useLanguage } from '../lib/useLanguage';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export function Footer() {
   const { t, lang } = useLanguage();
+  const location = useLocation();
 
   // Internal linking için sayfa linkleri
   const footerLinks = lang === 'tr' ? [
@@ -17,6 +18,14 @@ export function Footer() {
     { href: '/en/videolar/', label: 'Videos' },
     { href: '/en/ulasim-tarifesi/', label: 'Transportation Guide' },
     { href: '/en/kis-baskadir/', label: 'Winter Scenes' },
+  ];
+
+  const informationLinks = lang === 'tr' ? [
+    { href: '/site-hakkinda-iletisim/', label: 'Site Hakkında ve İletişim' },
+    { href: '/gizlilik-cerezler/', label: 'Gizlilik ve Çerezler' },
+  ] : [
+    { href: '/en/site-hakkinda-iletisim/', label: 'About and Contact' },
+    { href: '/en/gizlilik-cerezler/', label: 'Privacy and Cookies' },
   ];
 
   return (
@@ -37,13 +46,24 @@ export function Footer() {
             </Link>
           ))}
         </nav>
+        <nav className="mt-4 flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-x-6 sm:gap-y-2" aria-label={lang === 'tr' ? 'Bilgilendirme sayfaları' : 'Information pages'}>
+          {informationLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              state={{ returnTo: location.pathname }}
+              className="text-sm md:text-base text-sedef-secondary hover:text-sedef-accent transition-colors duration-200 px-3 py-2 -mx-3 -my-2 rounded-lg hover:bg-sedef-accent/5 min-h-[44px] flex items-center justify-center"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       {/* Telif hakkı ve lisans bilgisi */}
       <div className="border-t border-sedef-border pt-6">
         <p className="text-sm text-sedef-secondary text-center">
-          &copy; 2026 <strong className="text-sedef-primary">sedefada.com</strong>{' '}
-          {t.footerRights}
+          &copy; {new Date().getFullYear()} <strong className="text-sedef-primary">Sedefada.com</strong>
         </p>
         <p className="text-[11px] text-sedef-secondary/60 mt-2 text-center">
           {lang === 'tr' 

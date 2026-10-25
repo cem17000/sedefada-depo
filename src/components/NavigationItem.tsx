@@ -48,6 +48,7 @@ interface NavigationProps {
   onNavigate: (item: NavItem) => void;
   activeItem: NavItem | null;
   renderMobileContent: () => React.ReactNode;
+  showMobileContent?: boolean;
 }
 
 const NAV_CONFIG = (content.navItems as NavConfigSource[])
@@ -82,7 +83,7 @@ const NAV_ROUTES: Record<string, string> = {
 
 type ConfigItemType = typeof NAV_CONFIG[number];
 
-export function Navigation({ onNavigate, activeItem, renderMobileContent }: NavigationProps) {
+export function Navigation({ onNavigate, activeItem, renderMobileContent, showMobileContent = false }: NavigationProps) {
   const { t, lang } = useLanguage();
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches);
@@ -111,6 +112,10 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent }: Navi
       setActiveId(activeItem.id);
     }
   }, [activeItem]);
+
+  useEffect(() => {
+    if (showMobileContent) setActiveId('');
+  }, [showMobileContent]);
 
   const getDisplayName = (config: ConfigItemType): string => {
     const key = NAV_DISPLAY_NAME[config.id];
@@ -187,6 +192,12 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent }: Navi
           })}
         </nav>
       </div>
+
+      {showMobileContent && (
+        <div className="mt-2 mb-4 md:hidden w-full overflow-hidden">
+          {renderMobileContent()}
+        </div>
+      )}
 
       <WeatherWidget />
       <DistanceCalculator />

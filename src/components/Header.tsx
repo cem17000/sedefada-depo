@@ -26,6 +26,20 @@ export function Header() {
   const handleLanguageChange = (newLang: Lang) => {
     setLang(newLang);
     setOpen(false);
+
+    const navigateToLanguagePath = (path: string) => {
+      const state = location.state;
+      if (typeof state !== 'object' || state === null || !('returnTo' in state) || typeof state.returnTo !== 'string') {
+        navigate(path);
+        return;
+      }
+
+      const returnPath = state.returnTo.replace(/^\/en(?=\/|$)/, '') || '/';
+      const returnTo = newLang === 'en'
+        ? returnPath === '/' ? '/en/' : `/en${returnPath}`
+        : returnPath;
+      navigate(path, { state: { ...state, returnTo } });
+    };
     
     // Mevcut pathname'i al ve normalize et (sondaki /'ları kaldır, sadece / ise bırak)
     let currentPath = location.pathname;
@@ -47,10 +61,10 @@ export function Header() {
     if (newLang === 'en') {
       // İngilizce için /en/ prefix'i ekle
       const newPath = currentPath === '/' ? '/en/' : `/en${currentPath}/`;
-      navigate(newPath);
+      navigateToLanguagePath(newPath);
     } else {
       // Türkçe için prefix'siz URL
-      navigate(currentPath === '/' ? '/' : `${currentPath}/`);
+      navigateToLanguagePath(currentPath === '/' ? '/' : `${currentPath}/`);
     }
   };
 

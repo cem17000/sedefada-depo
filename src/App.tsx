@@ -12,6 +12,7 @@ import { MetroRouteFinder } from './components/MetroRouteFinder';
 import { FAQSection } from './components/FAQSection';
 import { EcologyPage } from './components/EcologyPage';
 import { LiveCamera } from './components/LiveCamera';
+import { X } from 'lucide-react';
 import { useLanguage } from './lib/useLanguage';
 import { useSEO, getPageSEO } from './lib/useSEO';
 import content from './data/content.json';
@@ -53,6 +54,34 @@ const REVERSE_ROUTE_MAP: Record<string, string> = {
   'ulasim_tarife': 'ulasim-tarifesi',
   'web': 'web-canli',
   'iletisim_bilgileri': 'cesitli-iletisim-bilgisi',
+};
+
+const INFORMATION_PAGES = {
+  about: {
+    slug: 'site-hakkinda-iletisim',
+    title: { tr: 'Site Hakkında ve İletişim', en: 'About and Contact' },
+    description: {
+      tr: 'Sedefada.com hakkında bilgi ve iletişim adresi.',
+      en: 'Information about Sedefada.com and contact details.',
+    },
+  },
+  privacy: {
+    slug: 'gizlilik-cerezler',
+    title: { tr: 'Gizlilik ve Çerezler', en: 'Privacy and Cookies' },
+    description: {
+      tr: 'Sedefada.com gizlilik ve çerez bilgilendirmesi.',
+      en: 'Privacy and cookies information for Sedefada.com.',
+    },
+  },
+} as const;
+
+type InformationPageId = keyof typeof INFORMATION_PAGES;
+
+const INFORMATION_ROUTE_MAP: Record<string, InformationPageId> = {
+  'site-hakkinda-iletisim': 'about',
+  'en/site-hakkinda-iletisim': 'about',
+  'gizlilik-cerezler': 'privacy',
+  'en/gizlilik-cerezler': 'privacy',
 };
 
 // Page metadata for SEO
@@ -534,7 +563,13 @@ function AppContent() {
   const [loading, setLoading] = useState(false);
   const [activeTitle, setActiveTitle] = useState('');
   const [activeItem, setActiveItem] = useState<NavItem | null>(null);
+  const [activeInformationPage, setActiveInformationPage] = useState<InformationPageId | null>(null);
   const [isNotFound, setIsNotFound] = useState(false);
+
+  const closeInformationPage = () => {
+    const returnTo = (location.state as { returnTo?: unknown } | null)?.returnTo;
+    navigate(typeof returnTo === 'string' ? returnTo : lang === 'en' ? '/en/' : '/');
+  };
 
   useLayoutEffect(() => {
     document.getElementById('root')?.style.setProperty('visibility', 'visible');
@@ -624,12 +659,28 @@ function AppContent() {
     
     // Ana sayfa (hem Türkçe hem İngilizce)
     if (path === '' || path === '/' || path === 'en') {
+      setIsNotFound(false);
+      setActiveInformationPage(null);
       setActiveItem(null);
       setActiveTitle('');
       setPosts([]);
       setImages([]);
       return;
     }
+
+    const informationPage = INFORMATION_ROUTE_MAP[path];
+    if (informationPage) {
+      setIsNotFound(false);
+      setActiveInformationPage(informationPage);
+      setActiveItem(null);
+      setActiveTitle('');
+      setPosts([]);
+      setImages([]);
+      setLoading(false);
+      return;
+    }
+
+    setActiveInformationPage(null);
 
     // Route'u çöz - önce direkt eşleşme, sonra /en/ prefix'li eşleşme
     let itemId = ROUTE_MAP[path];
@@ -711,6 +762,62 @@ function AppContent() {
   };
 
   const renderContent = () => {
+    if (activeInformationPage === 'about') {
+      return (
+        <article className="text-base leading-relaxed text-sedef-primary">
+          <p className="text-base leading-relaxed text-sedef-primary">
+            {lang === 'tr' ? (
+              <>
+                Sedefada.com, Sedef Adası’nın tarihi, doğası, ulaşımı ve ada yaşamına ilişkin bilgi ve anıları bir araya getiren, Cem Birder tarafından yürütülen bağımsız bir çalışmadır. Resmî bir kurumun internet sitesi değildir. Görüş, öneri ve düzeltmeleriniz için{' '}
+                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>
+                {' '}adresinden iletişime geçebilirsiniz.
+              </>
+            ) : (
+              <>
+                Sedefada.com is an independent project run by Cem Birder, bringing together information and memories about Sedef Island’s history, nature, transport and island life. It is not an official institutional website. For feedback, suggestions and corrections, please contact{' '}
+                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>.
+              </>
+            )}
+          </p>
+        </article>
+      );
+    }
+
+    if (activeInformationPage === 'privacy') {
+      return (
+        <article className="space-y-5 text-base leading-relaxed text-sedef-primary">
+          {lang === 'tr' ? (
+            <>
+              <p className="text-base leading-relaxed text-sedef-primary">
+                Sedefada.com, Cem Birder tarafından yönetilmektedir. Sitede Google Analytics kullanılmamaktadır.
+              </p>
+              <p className="text-base leading-relaxed text-sedef-primary">
+                Sitenin barındırma ve performans hizmetlerini sağlayan Netlify ile sayfalara gömülü YouTube içerikleri teknik veriler işleyebilir. YouTube içerikleri üçüncü taraf çerezlerin kullanılmasına yol açabilir.
+              </p>
+              <p className="text-base leading-relaxed text-sedef-primary">
+                Gizlilik ve kişisel verilerle ilgili sorularınız ve talepleriniz için{' '}
+                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>
+                {' '}adresinden iletişime geçebilirsiniz.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-base leading-relaxed text-sedef-primary">
+                Sedefada.com is managed by Cem Birder. This website does not use Google Analytics.
+              </p>
+              <p className="text-base leading-relaxed text-sedef-primary">
+                Netlify, which provides hosting and performance services, and YouTube content embedded in the pages may process technical data. YouTube content may result in the use of third-party cookies.
+              </p>
+              <p className="text-base leading-relaxed text-sedef-primary">
+                For questions and requests regarding privacy and personal data, please contact{' '}
+                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>.
+              </p>
+            </>
+          )}
+        </article>
+      );
+    }
+
     if (loading) {
       return (
         <div className="space-y-6">
@@ -762,16 +869,47 @@ function AppContent() {
     );
   };
 
+  const renderInformationPage = () => {
+    if (!activeInformationPage) return null;
+
+    return (
+      <section className="relative">
+        <button
+          type="button"
+          onClick={closeInformationPage}
+          className="absolute right-0 top-0 inline-flex h-11 w-11 items-center justify-center rounded-full text-sedef-secondary transition-colors hover:bg-sedef-accent/10 hover:text-sedef-accent focus:outline-none focus:ring-2 focus:ring-sedef-accent"
+          aria-label={lang === 'tr' ? 'Bilgilendirme sayfasını kapat' : 'Close information page'}
+        >
+          <X className="h-5 w-5" aria-hidden="true" />
+        </button>
+        <h1 className="pr-12 text-2xl font-bold text-sedef-primary md:text-3xl">
+          {INFORMATION_PAGES[activeInformationPage].title[lang]}
+        </h1>
+        <div className="mt-5 rounded-xl border border-sedef-border bg-sedef-card-bg/40 p-6 md:p-8">
+          {renderContent()}
+        </div>
+      </section>
+    );
+  };
+
   // 404 sayfası göster
   if (isNotFound) {
-    return <NotFoundPage />;
+    return (
+      <>
+        <NotFoundPage />
+        <Footer />
+      </>
+    );
   }
 
   if (isCameraView) {
     return (
-      <LiveCamera
-        onClose={() => navigate(location.pathname.startsWith('/en/') ? '/en/web-canli' : '/web-canli')}
-      />
+      <>
+        <LiveCamera
+          onClose={() => navigate(location.pathname.startsWith('/en/') ? '/en/web-canli' : '/web-canli')}
+        />
+        <Footer />
+      </>
     );
   }
 
@@ -786,49 +924,52 @@ function AppContent() {
         <Navigation 
           onNavigate={handleNavigation} 
           activeItem={activeItem} 
-          renderMobileContent={renderContent} 
+          renderMobileContent={activeInformationPage ? renderInformationPage : renderContent}
+          showMobileContent={Boolean(activeInformationPage)}
         />
 
         <main className="hidden md:flex flex-1 flex-col gap-8 min-w-0">
-          {/* Sayfa başlığı - h1 (sadece iç sayfalarda, ana sayfada HeroBanner h1 olarak kullanılıyor) */}
-          {activeTitle && (
-            <header className="mb-2">
-              <h1 className="text-2xl md:text-3xl font-bold text-sedef-primary">
-                {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? '🐚 Sedef Adası ve Tarihi' : '🐚 Sedef Island and Its History')}
-                {activeTitle === 'guncel_gelismeler' && (lang === 'tr' ? 'Güncel Gelişmeler' : 'Current Developments')}
-                {activeTitle === 'anilar' && (lang === 'tr' ? 'Sedef Adası Anıları' : 'Sedef Island Memories')}
-                {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Sedef Adası Ekolojisi' : 'Ecology of Sedef Island')}
-                {activeTitle === 'videolar' && (lang === 'tr' ? 'Sedef Adası Videoları' : 'Sedef Island Videos')}
-                {activeTitle === 'ulasim_tarife' && (lang === 'tr' ? 'Sedef Adası Ulaşım Rehberi' : 'Transportation Guide to Sedef Island')}
-                {activeTitle === 'kis_baskadir' && (lang === 'tr' ? 'Sedef Adası\'nda Kış' : 'Winter on Sedef Island')}
-                {activeTitle === 'web' && (lang === 'tr' ? 'Canlı Marmara Görüntüsü' : 'Live Marmara View')}
-                {activeTitle === 'iletisim_bilgileri' && (lang === 'tr' ? 'Faydalı Telefonlar' : 'Various Contact Information')}
-              </h1>
-              {/* Breadcrumb */}
-              <nav className="mt-2 text-sm text-sedef-secondary" aria-label="Breadcrumb">
-                <ol className="flex items-center gap-2">
-                  <li>
-                    <a href={lang === 'en' ? '/en' : '/'} className="hover:text-sedef-accent transition-colors">
-                      {lang === 'tr' ? 'Ana Sayfa' : 'Home'}
-                    </a>
-                  </li>
-                  <li className="text-sedef-accent/40">/</li>
-                  <li className="text-sedef-primary font-medium">
-                    {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? 'Tarihçe' : 'History')}
+          {activeInformationPage ? renderInformationPage() : (
+            <>
+              {/* Sayfa başlığı - h1 (sadece iç sayfalarda, ana sayfada HeroBanner h1 olarak kullanılıyor) */}
+              {activeTitle && (
+                <header className="mb-2">
+                  <h1 className="text-2xl md:text-3xl font-bold text-sedef-primary">
+                    {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? '🐚 Sedef Adası ve Tarihi' : '🐚 Sedef Island and Its History')}
                     {activeTitle === 'guncel_gelismeler' && (lang === 'tr' ? 'Güncel Gelişmeler' : 'Current Developments')}
-                    {activeTitle === 'anilar' && (lang === 'tr' ? 'Anılar' : 'Memories')}
-                    {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Ekoloji' : 'Ecology')}
-                    {activeTitle === 'videolar' && (lang === 'tr' ? 'Videolar' : 'Videos')}
-                    {activeTitle === 'ulasim_tarife' && (lang === 'tr' ? 'Ulaşım' : 'Transportation')}
-                    {activeTitle === 'kis_baskadir' && (lang === 'tr' ? 'Kış' : 'Winter')}
-                    {activeTitle === 'web' && (lang === 'tr' ? 'Canlı Görüntü' : 'Live View')}
-                    {activeTitle === 'iletisim_bilgileri' && (lang === 'tr' ? 'İletişim Bilgisi' : 'Contact Info')}
-                  </li>
-                </ol>
-              </nav>
-            </header>
-          )}
-          {renderContent()}
+                    {activeTitle === 'anilar' && (lang === 'tr' ? 'Sedef Adası Anıları' : 'Sedef Island Memories')}
+                    {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Sedef Adası Ekolojisi' : 'Ecology of Sedef Island')}
+                    {activeTitle === 'videolar' && (lang === 'tr' ? 'Sedef Adası Videoları' : 'Sedef Island Videos')}
+                    {activeTitle === 'ulasim_tarife' && (lang === 'tr' ? 'Sedef Adası Ulaşım Rehberi' : 'Transportation Guide to Sedef Island')}
+                    {activeTitle === 'kis_baskadir' && (lang === 'tr' ? 'Sedef Adası\'nda Kış' : 'Winter on Sedef Island')}
+                    {activeTitle === 'web' && (lang === 'tr' ? 'Canlı Marmara Görüntüsü' : 'Live Marmara View')}
+                    {activeTitle === 'iletisim_bilgileri' && (lang === 'tr' ? 'Faydalı Telefonlar' : 'Various Contact Information')}
+                  </h1>
+                  {/* Breadcrumb */}
+                  <nav className="mt-2 text-sm text-sedef-secondary" aria-label="Breadcrumb">
+                    <ol className="flex items-center gap-2">
+                      <li>
+                        <a href={lang === 'en' ? '/en' : '/'} className="hover:text-sedef-accent transition-colors">
+                          {lang === 'tr' ? 'Ana Sayfa' : 'Home'}
+                        </a>
+                      </li>
+                      <li className="text-sedef-accent/40">/</li>
+                      <li className="text-sedef-primary font-medium">
+                        {activeTitle === 'sedefada_tarihi' && (lang === 'tr' ? 'Tarihçe' : 'History')}
+                        {activeTitle === 'guncel_gelismeler' && (lang === 'tr' ? 'Güncel Gelişmeler' : 'Current Developments')}
+                        {activeTitle === 'anilar' && (lang === 'tr' ? 'Anılar' : 'Memories')}
+                        {activeTitle === 'ekoloji' && (lang === 'tr' ? 'Ekoloji' : 'Ecology')}
+                        {activeTitle === 'videolar' && (lang === 'tr' ? 'Videolar' : 'Videos')}
+                        {activeTitle === 'ulasim_tarife' && (lang === 'tr' ? 'Ulaşım' : 'Transportation')}
+                        {activeTitle === 'kis_baskadir' && (lang === 'tr' ? 'Kış' : 'Winter')}
+                        {activeTitle === 'web' && (lang === 'tr' ? 'Canlı Görüntü' : 'Live View')}
+                        {activeTitle === 'iletisim_bilgileri' && (lang === 'tr' ? 'İletişim Bilgisi' : 'Contact Info')}
+                      </li>
+                    </ol>
+                  </nav>
+                </header>
+              )}
+              {renderContent()}
           
           {/* Internal linking - İlgili içerikler */}
           {activeTitle && (
@@ -867,6 +1008,8 @@ function AppContent() {
                 )}
               </ul>
             </aside>
+          )}
+            </>
           )}
         </main>
 
@@ -922,8 +1065,30 @@ function AppWrapper() {
     return ROUTE_MAP[path] || ROUTE_MAP[`en/${path}`] || '';
   };
 
+  const informationPageId = INFORMATION_ROUTE_MAP[normalizedPathname.replace(/^\/+|\/+$/g, '')];
+  const informationPage = informationPageId ? INFORMATION_PAGES[informationPageId] : null;
+  const informationPageTurkishUrl = informationPage
+    ? `https://sedefada.com/${informationPage.slug}/`
+    : undefined;
+  const informationPageEnglishUrl = informationPage
+    ? `https://sedefada.com/en/${informationPage.slug}/`
+    : undefined;
+  const informationPageSeoData = informationPage && informationPageTurkishUrl && informationPageEnglishUrl
+    ? {
+        title: `${informationPage.title[lang]} | Sedefada.com`,
+        description: informationPage.description[lang],
+        canonicalUrl: lang === 'tr' ? informationPageTurkishUrl : informationPageEnglishUrl,
+        alternateUrls: {
+          tr: informationPageTurkishUrl,
+          en: informationPageEnglishUrl,
+          default: informationPageTurkishUrl,
+        },
+      }
+    : undefined;
+
   // 404 sayfası için noindex SEO verisi
-  const isNotFoundPage = !getActiveItemId() && 
+  const isNotFoundPage = !getActiveItemId() &&
+    !informationPageId &&
     normalizedPathname !== '/' && 
     normalizedPathname !== '' && 
     normalizedPathname !== '/en' &&
@@ -935,7 +1100,7 @@ function AppWrapper() {
     title: lang === 'tr' ? 'Sayfa Bulunamadı - 404 | sedefada.com' : 'Page Not Found - 404 | sedefada.com',
     description: lang === 'tr' ? 'Aradığınız sayfa bulunamadı.' : 'The page you are looking for could not be found.',
     noIndex: true
-  } : getPageSEO(getActiveItemId(), lang, cameraSeoData));
+  } : informationPageSeoData ?? getPageSEO(getActiveItemId(), lang, cameraSeoData));
 
   return <AppContent />;
 }
