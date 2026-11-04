@@ -1,5 +1,3 @@
-export default (request: Request) => {
-  const homepage = new URL("/", request.url);
-
-  return Response.redirect(homepage, 301);
+export default () => {
+  return Response.redirect('https://sedefada.com/sedef-adasi-ve-tarihi/', 301);
 };

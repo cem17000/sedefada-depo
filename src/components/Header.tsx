@@ -4,6 +4,7 @@ import { useLanguage } from '../lib/useLanguage';
 import { LANGUAGES } from '../lib/i18n';
 import type { Lang } from '../lib/i18n';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { localizedPath, ROUTES } from '../lib/routes';
 
 export function Header() {
   const { lang, setLang } = useLanguage();
@@ -34,38 +35,10 @@ export function Header() {
         return;
       }
 
-      const returnPath = state.returnTo.replace(/^\/en(?=\/|$)/, '') || '/';
-      const returnTo = newLang === 'en'
-        ? returnPath === '/' ? '/en/' : `/en${returnPath}`
-        : returnPath;
+      const returnTo = localizedPath(state.returnTo, newLang) ?? ROUTES.home[newLang];
       navigate(path, { state: { ...state, returnTo } });
     };
-    
-    // Mevcut pathname'i al ve normalize et (sondaki /'ları kaldır, sadece / ise bırak)
-    let currentPath = location.pathname;
-    
-    // Eğer /en/ prefix'i varsa kaldır
-    if (currentPath.startsWith('/en/')) {
-      currentPath = currentPath.substring(4); // '/en/' kısmını kaldır
-    } else if (currentPath === '/en') {
-      currentPath = '/';
-    }
-    
-    // Path'i normalize et (çift slash'ları kaldır)
-    currentPath = currentPath.replace(/\/+/g, '/');
-    if (currentPath !== '/' && currentPath.endsWith('/')) {
-      currentPath = currentPath.slice(0, -1);
-    }
-    
-    // Yeni dil için URL oluştur
-    if (newLang === 'en') {
-      // İngilizce için /en/ prefix'i ekle
-      const newPath = currentPath === '/' ? '/en/' : `/en${currentPath}/`;
-      navigateToLanguagePath(newPath);
-    } else {
-      // Türkçe için prefix'siz URL
-      navigateToLanguagePath(currentPath === '/' ? '/' : `${currentPath}/`);
-    }
+    navigateToLanguagePath(localizedPath(location.pathname, newLang) ?? ROUTES.home[newLang]);
   };
 
   return (
@@ -77,7 +50,7 @@ export function Header() {
         >
           <img
             src="/sedef-adasi-marti.webp"
-            alt="Martı"
+            alt={lang === 'tr' ? 'Martı' : 'Seagull'}
             className="w-[160px] h-[120px] object-contain"
             style={{ transform: 'scaleX(-1) rotate(-15deg)' }}
           />

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import content from '../data/content.json';
 import { BookOpen, Film, Snowflake, Home, Anchor, HelpCircle, Ship, Phone, Globe, Heart, Video, Landmark, Gem, Leaf } from 'lucide-react';
 import { WeatherWidget } from './WeatherWidget';
 import { useLanguage } from '../lib/useLanguage';
 import type { Translations } from '../lib/i18n';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { ROUTES, type RouteId } from '../lib/routes';
 
 export interface NavItem {
   id: string;
@@ -69,27 +70,12 @@ const NAV_DISPLAY_NAME: Record<string, keyof Translations> = {
   iletisim_bilgileri: 'navIletisim',
 };
 
-const NAV_ROUTES: Record<string, string> = {
-  sedefada_tarihi: '/sedef-adasi-ve-tarihi/',
-  guncel_gelismeler: '/guncel-gelismeler/',
-  anilar: '/anilar/',
-  ekoloji: '/ekoloji/',
-  videolar: '/videolar/',
-  kis_baskadir: '/kis-baskadir/',
-  ulasim_tarife: '/ulasim-tarifesi/',
-  web: '/web-canli/',
-  iletisim_bilgileri: '/cesitli-iletisim-bilgisi/',
-};
-
 type ConfigItemType = typeof NAV_CONFIG[number];
 
 export function Navigation({ onNavigate, activeItem, renderMobileContent, showMobileContent = false }: NavigationProps) {
   const { t, lang } = useLanguage();
-  const location = useLocation();
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches);
-  const [activeId, setActiveId] = useState<string>(() => (
-    window.matchMedia('(max-width: 767px)').matches ? '' : 'sedefada_tarihi'
-  ));
+  const [activeId, setActiveId] = useState('');
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 767px)');
@@ -99,15 +85,8 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent, showMo
     return () => mediaQuery.removeEventListener('change', updateViewport);
   }, []);
 
-  useEffect(() => {
-    if (!isMobile && (location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/')) {
-      handleItemClick(NAV_CONFIG[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile, location.pathname]);
-
   // activeItem prop değiştiğinde activeId'yi senkronize et (mobil uyumluluk için)
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (activeItem && activeItem.id) {
       setActiveId(activeItem.id);
     }
@@ -166,7 +145,7 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent, showMo
             return (
               <div key={config.id} className="flex flex-col w-full">
                 <Link
-                  to={lang === 'en' ? `/en${NAV_ROUTES[config.id]}` : NAV_ROUTES[config.id]}
+                  to={ROUTES[config.id as RouteId][lang]}
                   onClick={(event) => {
                     if (isMobile && isActive) event.preventDefault();
                     handleItemClick(config);
@@ -184,6 +163,7 @@ export function Navigation({ onNavigate, activeItem, renderMobileContent, showMo
 
                 {isActive && activeItem && activeItem.id === config.id && (
                   <div className="mt-2 mb-4 p-4 bg-sedef-card-bg/40 border border-sedef-border rounded-xl md:hidden w-full overflow-hidden">
+                    <h1 className="text-xl font-bold text-sedef-primary mb-4">{getDisplayName(config)}</h1>
                     {renderMobileContent()}
                   </div>
                 )}

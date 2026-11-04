@@ -58,7 +58,7 @@ export function FAQSection() {
   };
 
   return (
-    <section className="mt-8 mb-6" aria-label="Sıkça Sorulan Sorular">
+    <section className="mt-8 mb-6" aria-label={lang === 'tr' ? 'Sıkça Sorulan Sorular' : 'Frequently Asked Questions'}>
       <h2 className="text-xl md:text-2xl font-bold text-sedef-primary mb-6 flex items-center gap-2">
         <span className="text-2xl">❓</span>
         {lang === 'tr' ? 'Sıkça Sorulan Sorular' : 'Frequently Asked Questions'}

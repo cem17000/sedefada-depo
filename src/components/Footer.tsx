@@ -1,5 +1,6 @@
 import { useLanguage } from '../lib/useLanguage';
 import { Link, useLocation } from 'react-router-dom';
+import { ROUTES } from '../lib/routes';
 
 export function Footer() {
   const { t, lang } = useLanguage();
@@ -13,19 +14,19 @@ export function Footer() {
     { href: '/ulasim-tarifesi/', label: 'Ulaşım Rehberi' },
     { href: '/kis-baskadir/', label: 'Kış Manzaraları' },
   ] : [
-    { href: '/en/sedef-adasi-ve-tarihi/', label: 'History of Sedef Island' },
-    { href: '/en/anilar/', label: 'Island Memories' },
-    { href: '/en/videolar/', label: 'Videos' },
-    { href: '/en/ulasim-tarifesi/', label: 'Transportation Guide' },
-    { href: '/en/kis-baskadir/', label: 'Winter Scenes' },
+    { href: ROUTES.sedefada_tarihi.en, label: 'History of Sedef Island' },
+    { href: ROUTES.anilar.en, label: 'Island Memories' },
+    { href: ROUTES.videolar.en, label: 'Videos' },
+    { href: ROUTES.ulasim_tarife.en, label: 'Transportation Guide' },
+    { href: ROUTES.kis_baskadir.en, label: 'Winter Scenes' },
   ];
 
   const informationLinks = lang === 'tr' ? [
     { href: '/site-hakkinda-iletisim/', label: 'Site Hakkında ve İletişim' },
     { href: '/gizlilik-cerezler/', label: 'Gizlilik ve Çerezler' },
   ] : [
-    { href: '/en/site-hakkinda-iletisim/', label: 'About and Contact' },
-    { href: '/en/gizlilik-cerezler/', label: 'Privacy and Cookies' },
+    { href: ROUTES.about.en, label: 'About and Contact' },
+    { href: ROUTES.privacy.en, label: 'Privacy and Cookies' },
   ];
 
   return (

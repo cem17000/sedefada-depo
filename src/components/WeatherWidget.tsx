@@ -345,15 +345,15 @@ export function WeatherWidget() {
         <div className="mt-4 pt-4 border-t border-sedef-border">
           <h4 className="text-xs font-semibold text-sedef-accent uppercase tracking-wide mb-3 flex items-center gap-2">
             <Wind className="w-3.5 h-3.5" />
-            5 Günlük Rüzgar Tahmini
+            {t.weatherWindForecast}
           </h4>
           <div className="grid grid-cols-5 gap-1 text-[10px]">
             {/* Header */}
-            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">Gün</div>
-            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">Yön</div>
-            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">Hız</div>
-            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">Esinti</div>
-            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">Durum</div>
+            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">{t.weatherDay}</div>
+            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">{t.weatherDirection}</div>
+            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">{t.weatherSpeed}</div>
+            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">{t.weatherGust}</div>
+            <div className="text-sedef-secondary font-semibold text-center pb-1 border-b border-sedef-border">{t.weatherConditions}</div>
             
             {/* Data rows */}
             {forecasts.map((day, idx) => {
@@ -397,7 +397,7 @@ export function WeatherWidget() {
             })}
           </div>
           <p className="text-[9px] text-sedef-secondary/60 mt-2 text-center">
-            Veri kaynağı: Open-Meteo (Sedef Adası: 40.874°N, 29.074°E)
+            {t.weatherSource}: Open-Meteo ({lang === 'tr' ? 'Sedef Adası' : 'Sedef Island'}: 40.874°N, 29.074°E)
           </p>
         </div>
       )}

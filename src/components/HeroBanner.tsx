@@ -6,12 +6,12 @@ import { useLocation } from 'react-router-dom';
 const IMAGES = [
   {
     src: '/sedeffoto.jpg',
-    alt: 'Sedef Adası havadan görünüm',
+    alt: { tr: 'Sedef Adası havadan görünüm', en: 'Aerial view of Sedef Island' },
     objectPosition: 'center center',
   },
   {
     src: '/sedefflower.webp',
-    alt: 'Sedef Adası çiçeği - Lunaria',
+    alt: { tr: 'Sedef Adası çiçeği - Lunaria', en: 'Sedef Island flower - Lunaria' },
     objectPosition: 'center center',
   },
 ];
@@ -25,7 +25,6 @@ export function HeroBanner() {
   const { lang } = useLanguage();
   const location = useLocation();
   const isHome = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/en/';
-  const isTurkishHome = lang === 'tr' && location.pathname === '/';
 
   useEffect(() => {
     let fadeTimer: ReturnType<typeof setTimeout>;
@@ -68,7 +67,7 @@ export function HeroBanner() {
       >
         <OptimizedImage
           src={IMAGES[current].src}
-          alt={IMAGES[current].alt}
+          alt={IMAGES[current].alt[lang]}
           className="w-full h-full"
           style={{
             opacity: visible ? 0.8 : 0,
@@ -89,20 +88,16 @@ export function HeroBanner() {
       {/* Metin Alanı */}
       <div className="relative z-10 px-6 md:px-16 w-full md:w-2/3 flex flex-col justify-center">
         <Heading className="leading-tight drop-shadow-md">
-          {(!isHome || isTurkishHome) && (
-            <span className="block text-lg md:text-2xl font-semibold text-teal-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-              {lang === 'tr' ? "Marmara'nın İncisi" : 'The Pearl of Marmara'}
-            </span>
-          )}
+          <span className="block text-lg md:text-2xl font-semibold text-teal-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            {lang === 'tr' ? "Marmara'nın İncisi" : 'The Pearl of Marmara'}
+          </span>
           <span className="block text-3xl md:text-6xl font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             {lang === 'tr' ? 'Sedef Adası' : 'Sedef Island'}
           </span>
         </Heading>
-        {(!isHome || isTurkishHome) && (
-          <p className="mt-3 text-xs md:text-base text-white font-medium italic drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] max-w-[220px] md:max-w-none">
-            {heroSubtitle}
-          </p>
-        )}
+        <p className="mt-3 text-xs md:text-base text-white font-medium italic drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] max-w-[220px] md:max-w-none">
+          {heroSubtitle}
+        </p>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ROUTES, type RouteId } from './routes';
 
 export interface SEOData {
   title: string;
@@ -239,21 +240,10 @@ export function getPageSEO(
   }
 
   // URL mapping for canonical URLs
-  const urlMap: Record<string, string> = {
-    'sedefada_tarihi': 'sedef-adasi-ve-tarihi',
-    'guncel_gelismeler': 'guncel-gelismeler',
-    'ulasim_tarife': 'ulasim-tarifesi',
-    'kis_baskadir': 'kis-baskadir',
-    'iletisim_bilgileri': 'cesitli-iletisim-bilgisi',
-    'web': 'web-canli',
-    'anilar': 'anilar',
-    'ekoloji': 'ekoloji',
-    'videolar': 'videolar'
-  };
-
-  const routePath = urlMap[pageId] || pageId;
-  const turkishUrl = `${BASE_URL}/${routePath}/`;
-  const englishUrl = `${BASE_URL}/en/${routePath}/`;
+  const route = ROUTES[pageId as RouteId];
+  if (!route) throw new Error(`Missing SEO route for ${pageId}`);
+  const turkishUrl = `${BASE_URL}${route.tr}`;
+  const englishUrl = `${BASE_URL}${route.en}`;
 
   return {
     title: page.title,

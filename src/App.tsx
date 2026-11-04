@@ -17,72 +17,10 @@ import { useLanguage } from './lib/useLanguage';
 import { useSEO, getPageSEO } from './lib/useSEO';
 import content from './data/content.json';
 import { englishNewspaperClipping } from './data/englishNewspaperClipping';
-
-// Route mapping for clean URLs
-const ROUTE_MAP: Record<string, string> = {
-  'sedef-adasi-ve-tarihi': 'sedefada_tarihi',
-  'guncel-gelismeler': 'guncel_gelismeler',
-  'anilar': 'anilar',
-  'ekoloji': 'ekoloji',
-  'videolar': 'videolar',
-  'kis-baskadir': 'kis_baskadir',
-  'ulasim-tarifesi': 'ulasim_tarife',
-  'web-canli': 'web',
-  'web-canli/kamera': 'web',
-  'cesitli-iletisim-bilgisi': 'iletisim_bilgileri',
-  // English routes
-  'en/sedef-adasi-ve-tarihi': 'sedefada_tarihi',
-  'en/guncel-gelismeler': 'guncel_gelismeler',
-  'en/anilar': 'anilar',
-  'en/ekoloji': 'ekoloji',
-  'en/videolar': 'videolar',
-  'en/kis-baskadir': 'kis_baskadir',
-  'en/ulasim-tarifesi': 'ulasim_tarife',
-  'en/web-canli': 'web',
-  'en/web-canli/kamera': 'web',
-  'en/cesitli-iletisim-bilgisi': 'iletisim_bilgileri',
-};
-
-// Reverse mapping for URL generation
-const REVERSE_ROUTE_MAP: Record<string, string> = {
-  'sedefada_tarihi': 'sedef-adasi-ve-tarihi',
-  'guncel_gelismeler': 'guncel-gelismeler',
-  'anilar': 'anilar',
-  'ekoloji': 'ekoloji',
-  'videolar': 'videolar',
-  'kis_baskadir': 'kis-baskadir',
-  'ulasim_tarife': 'ulasim-tarifesi',
-  'web': 'web-canli',
-  'iletisim_bilgileri': 'cesitli-iletisim-bilgisi',
-};
-
-const INFORMATION_PAGES = {
-  about: {
-    slug: 'site-hakkinda-iletisim',
-    title: { tr: 'Site Hakkında ve İletişim', en: 'About and Contact' },
-    description: {
-      tr: 'Sedefada.com hakkında bilgi ve iletişim adresi.',
-      en: 'Information about Sedefada.com and contact details.',
-    },
-  },
-  privacy: {
-    slug: 'gizlilik-cerezler',
-    title: { tr: 'Gizlilik ve Çerezler', en: 'Privacy and Cookies' },
-    description: {
-      tr: 'Sedefada.com gizlilik ve çerez bilgilendirmesi.',
-      en: 'Privacy and cookies information for Sedefada.com.',
-    },
-  },
-} as const;
+import { INFORMATION_PAGES } from './lib/information';
+import { getRouteId, normalizeContentLinks, ROUTES, type RouteId } from './lib/routes';
 
 type InformationPageId = keyof typeof INFORMATION_PAGES;
-
-const INFORMATION_ROUTE_MAP: Record<string, InformationPageId> = {
-  'site-hakkinda-iletisim': 'about',
-  'en/site-hakkinda-iletisim': 'about',
-  'gizlilik-cerezler': 'privacy',
-  'en/gizlilik-cerezler': 'privacy',
-};
 
 // Page metadata for SEO
 const PAGE_METADATA: Record<string, { title: string; description: string; schemaType: string; keywords?: string[] }> = {
@@ -147,12 +85,6 @@ const HOME_DESCRIPTIONS = {
   en: 'A comprehensive guide and archive about Sedef Island, including its history, nature, transport, architecture, memories, historic photographs, maps and island life.',
 };
 
-const INTERNAL_PAGE_LINK_PATTERN = /(href="\/(?:en\/)?(?:sedef-adasi-ve-tarihi|guncel-gelismeler|anilar|ekoloji|videolar|kis-baskadir|ulasim-tarifesi|web-canli(?:\/kamera)?|cesitli-iletisim-bilgisi))(?=")/g;
-
-function normalizeInternalPageLinks(content: string | undefined) {
-  return content?.replace(INTERNAL_PAGE_LINK_PATTERN, '$1/');
-}
-
 function generateHomeStructuredData(lang: 'tr' | 'en') {
   const homeUrl = lang === 'tr' ? 'https://sedefada.com/' : 'https://sedefada.com/en/';
   const organizationId = `${homeUrl}#organization`;
@@ -196,16 +128,14 @@ function generateHomeStructuredData(lang: 'tr' | 'en') {
 }
 
 // Generate JSON-LD structured data for a page
-function generateStructuredData(itemId: string, lang: string) {
-  const metadata = PAGE_METADATA[itemId];
-  if (!metadata) return null;
+function generateStructuredData(itemId: string, lang: 'tr' | 'en', isCameraView = false) {
+  const pageMetadata = PAGE_METADATA[itemId];
+  if (!pageMetadata) return null;
+  const metadata = { ...pageMetadata, ...getPageSEO(itemId, lang) };
 
   const baseUrl = 'https://sedefada.com';
-  const routePath = REVERSE_ROUTE_MAP[itemId] || '';
   const homeUrl = lang === 'tr' ? `${baseUrl}/` : `${baseUrl}/en/`;
-  const pageUrl = lang === 'tr'
-    ? `${baseUrl}/${routePath}/`
-    : `${baseUrl}/en/${routePath}/`;
+  const pageUrl = `${baseUrl}${ROUTES[isCameraView ? 'camera' : itemId as RouteId][lang]}`;
   const currentYear = new Date().getFullYear();
 
   // BreadcrumbList schema
@@ -556,7 +486,7 @@ function AppContent() {
   const { t, lang } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const isCameraView = location.pathname === '/web-canli/kamera' || location.pathname === '/web-canli/kamera/' || location.pathname === '/en/web-canli/kamera' || location.pathname === '/en/web-canli/kamera/';
+  const isCameraView = getRouteId(location.pathname) === 'camera';
   const [posts, setPosts] = useState<Array<{ id: string; blogSlug: string; title: string; content: string; publishedAt: string; categories: string[]; type: string; isSimulated: boolean }>>([]);
   const [images, setImages] = useState<{ url: string; title: string }[]>([]);
   const [viewMode, setViewMode] = useState<'posts' | 'gallery'>('posts');
@@ -571,17 +501,13 @@ function AppContent() {
     navigate(typeof returnTo === 'string' ? returnTo : lang === 'en' ? '/en/' : '/');
   };
 
-  useLayoutEffect(() => {
-    document.getElementById('root')?.style.setProperty('visibility', 'visible');
-  }, []);
-
   const getLocalizedPost = (post: any, currentLang: string) => {
     const translatedContent =
       currentLang === 'tr'
         ? post.contents?.tr
-        : post.contents?.[currentLang] && post.contents?.[currentLang] !== post.contents?.tr
-        ? post.contents?.[currentLang]
-        : post.contents?.en ?? post.contents?.tr;
+        : post.contents?.en && post.contents.en !== post.contents?.tr
+        ? post.contents.en
+        : '<p>English translation is not available yet.</p>';
 
     const localizedContent = post.id === 'anilar' && currentLang === 'en'
       ? `${englishNewspaperClipping}${translatedContent ?? ''}`
@@ -594,7 +520,7 @@ function AppContent() {
     return {
       ...post,
       title: post.titles?.[currentLang] ?? post.titles?.en ?? post.titles?.tr ?? post.title,
-      content: normalizeInternalPageLinks(versionedContent ?? post.content),
+      content: normalizeContentLinks(versionedContent ?? post.content),
       categories: post.categories?.[currentLang] ?? post.categories?.en ?? post.categories?.tr ?? post.categories ?? [],
     };
   };
@@ -650,7 +576,7 @@ function AppContent() {
   }, [location]);
 
   // Route değiştiğinde içeriği yükle
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Path'i al ve normalize et
     let path = location.pathname;
     
@@ -668,7 +594,8 @@ function AppContent() {
       return;
     }
 
-    const informationPage = INFORMATION_ROUTE_MAP[path];
+    const routeId = getRouteId(path);
+    const informationPage = routeId === 'about' || routeId === 'privacy' ? routeId : undefined;
     if (informationPage) {
       setIsNotFound(false);
       setActiveInformationPage(informationPage);
@@ -682,18 +609,7 @@ function AppContent() {
 
     setActiveInformationPage(null);
 
-    // Route'u çöz - önce direkt eşleşme, sonra /en/ prefix'li eşleşme
-    let itemId = ROUTE_MAP[path];
-    if (!itemId) {
-      // /en/ prefix'li versiyonu dene
-      itemId = ROUTE_MAP[`en/${path}`];
-    }
-    if (!itemId) {
-      // Belki path zaten en/ ile başlıyordur
-      if (path.startsWith('en/')) {
-        itemId = ROUTE_MAP[path];
-      }
-    }
+    const itemId = routeId === 'camera' ? 'web' : routeId;
     
     if (!itemId) {
       // 404 - bilinmeyen route
@@ -731,7 +647,7 @@ function AppContent() {
       // Sayfa yapılandırılmış verisini güncelle
     const metadata = PAGE_METADATA[itemId];
     if (metadata) {
-      const schemas = generateStructuredData(itemId, lang);
+      const schemas = generateStructuredData(itemId, lang, isCameraView);
       injectStructuredData(schemas);
     }
   }, [location, lang, loadPostsForItem]);
@@ -755,66 +671,17 @@ function AppContent() {
       return;
     }
 
-    const routePath = REVERSE_ROUTE_MAP[item.id];
-    if (routePath) {
-      navigate(lang === 'en' ? `/en/${routePath}/` : `/${routePath}/`);
+    const route = ROUTES[item.id as RouteId];
+    if (route) {
+      navigate(route[lang]);
     }
   };
 
   const renderContent = () => {
-    if (activeInformationPage === 'about') {
+    if (activeInformationPage) {
       return (
-        <article className="text-base leading-relaxed text-sedef-primary">
-          <p className="text-base leading-relaxed text-sedef-primary">
-            {lang === 'tr' ? (
-              <>
-                Sedefada.com, Sedef Adası’nın tarihi, doğası, ulaşımı ve ada yaşamına ilişkin bilgi ve anıları bir araya getiren, Cem Birder tarafından yürütülen bağımsız bir çalışmadır. Resmî bir kurumun internet sitesi değildir. Görüş, öneri ve düzeltmeleriniz için{' '}
-                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>
-                {' '}adresinden iletişime geçebilirsiniz.
-              </>
-            ) : (
-              <>
-                Sedefada.com is an independent project run by Cem Birder, bringing together information and memories about Sedef Island’s history, nature, transport and island life. It is not an official institutional website. For feedback, suggestions and corrections, please contact{' '}
-                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>.
-              </>
-            )}
-          </p>
-        </article>
-      );
-    }
-
-    if (activeInformationPage === 'privacy') {
-      return (
-        <article className="space-y-5 text-base leading-relaxed text-sedef-primary">
-          {lang === 'tr' ? (
-            <>
-              <p className="text-base leading-relaxed text-sedef-primary">
-                Sedefada.com, Cem Birder tarafından yönetilmektedir. Sitede Google Analytics kullanılmamaktadır.
-              </p>
-              <p className="text-base leading-relaxed text-sedef-primary">
-                Sitenin barındırma ve performans hizmetlerini sağlayan Netlify ile sayfalara gömülü YouTube içerikleri teknik veriler işleyebilir. YouTube içerikleri üçüncü taraf çerezlerin kullanılmasına yol açabilir.
-              </p>
-              <p className="text-base leading-relaxed text-sedef-primary">
-                Gizlilik ve kişisel verilerle ilgili sorularınız ve talepleriniz için{' '}
-                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>
-                {' '}adresinden iletişime geçebilirsiniz.
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-base leading-relaxed text-sedef-primary">
-                Sedefada.com is managed by Cem Birder. This website does not use Google Analytics.
-              </p>
-              <p className="text-base leading-relaxed text-sedef-primary">
-                Netlify, which provides hosting and performance services, and YouTube content embedded in the pages may process technical data. YouTube content may result in the use of third-party cookies.
-              </p>
-              <p className="text-base leading-relaxed text-sedef-primary">
-                For questions and requests regarding privacy and personal data, please contact{' '}
-                <a className="text-sedef-accent hover:underline" href="mailto:cembirder@gmail.com">cembirder@gmail.com</a>.
-              </p>
-            </>
-          )}
-        </article>
+        <article className="space-y-5 text-base leading-relaxed text-sedef-primary [&_a]:text-sedef-accent [&_a:hover]:underline"
+          dangerouslySetInnerHTML={{ __html: INFORMATION_PAGES[activeInformationPage].content[lang] }} />
       );
     }
 
@@ -906,7 +773,7 @@ function AppContent() {
     return (
       <>
         <LiveCamera
-          onClose={() => navigate(location.pathname.startsWith('/en/') ? '/en/web-canli' : '/web-canli')}
+          onClose={() => navigate(ROUTES.web[lang])}
         />
         <Footer />
       </>
@@ -949,7 +816,7 @@ function AppContent() {
                   <nav className="mt-2 text-sm text-sedef-secondary" aria-label="Breadcrumb">
                     <ol className="flex items-center gap-2">
                       <li>
-                        <a href={lang === 'en' ? '/en' : '/'} className="hover:text-sedef-accent transition-colors">
+                        <a href={lang === 'en' ? '/en/' : '/'} className="hover:text-sedef-accent transition-colors">
                           {lang === 'tr' ? 'Ana Sayfa' : 'Home'}
                         </a>
                       </li>
@@ -980,28 +847,28 @@ function AppContent() {
               <ul className="flex flex-wrap gap-2">
                 {activeTitle !== 'sedefada_tarihi' && (
                   <li>
-                    <Link to={lang === 'en' ? '/en/sedef-adasi-ve-tarihi' : '/sedef-adasi-ve-tarihi'} className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={ROUTES.sedefada_tarihi[lang]} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Sedef Adası Tarihi' : 'History of Sedef Island'}
                     </Link>
                   </li>
                 )}
                 {activeTitle !== 'ulasim_tarife' && (
                   <li>
-                    <Link to={lang === 'en' ? '/en/ulasim-tarifesi' : '/ulasim-tarifesi'} className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={ROUTES.ulasim_tarife[lang]} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Ulaşım Rehberi' : 'Transportation Guide'}
                     </Link>
                   </li>
                 )}
                 {activeTitle !== 'anilar' && (
                   <li>
-                    <Link to={lang === 'en' ? '/en/anilar' : '/anilar'} className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={ROUTES.anilar[lang]} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Ada Anıları' : 'Island Memories'}
                     </Link>
                   </li>
                 )}
                 {activeTitle !== 'kis_baskadir' && (
                   <li>
-                    <Link to={lang === 'en' ? '/en/kis-baskadir' : '/kis-baskadir'} className="text-sm text-sedef-accent hover:underline transition-colors">
+                    <Link to={ROUTES.kis_baskadir[lang]} className="text-sm text-sedef-accent hover:underline transition-colors">
                       {lang === 'tr' ? 'Kış Manzaraları' : 'Winter Scenes'}
                     </Link>
                   </li>
@@ -1034,44 +901,38 @@ function App() {
 // SEO hook'unu kullanmak için wrapper bileşen
 function AppWrapper() {
   const location = useLocation();
-  const { lang } = useLanguage();
+  const { lang, setLang } = useLanguage();
+  useLayoutEffect(() => {
+    const urlLang = location.pathname === '/en' || location.pathname.startsWith('/en/') ? 'en' : 'tr';
+    if (lang !== urlLang) setLang(urlLang);
+  }, [location.pathname, lang, setLang]);
   const normalizedPathname = location.pathname === '/'
     ? '/'
     : location.pathname.replace(/\/+$/, '');
-  const isCameraRoute = normalizedPathname === '/web-canli/kamera' || normalizedPathname === '/en/web-canli/kamera';
+  const routeId = getRouteId(normalizedPathname);
+  const isCameraRoute = routeId === 'camera';
   const cameraSeoData = isCameraRoute ? {
-    canonicalUrl: lang === 'tr' ? 'https://sedefada.com/web-canli/kamera/' : 'https://sedefada.com/en/web-canli/kamera/',
+    canonicalUrl: `https://sedefada.com${ROUTES.camera[lang]}`,
     alternateUrls: {
-      tr: 'https://sedefada.com/web-canli/kamera/',
-      en: 'https://sedefada.com/en/web-canli/kamera/',
-      default: 'https://sedefada.com/web-canli/kamera/',
+      tr: `https://sedefada.com${ROUTES.camera.tr}`,
+      en: `https://sedefada.com${ROUTES.camera.en}`,
+      default: `https://sedefada.com${ROUTES.camera.tr}`,
     },
   } : undefined;
   
   // URL'den aktif sayfa ID'sini hesapla
   const getActiveItemId = (): string => {
-    let path = normalizedPathname.slice(1);
-    // /en/ prefix'ini kaldır
-    if (path.startsWith('en/')) {
-      path = path.substring(3);
-    }
-    // /en ana sayfası için boş döndür
-    if (path === 'en') {
-      return '';
-    }
-    if (path === '' || path === '/') {
-      return '';
-    }
-    return ROUTE_MAP[path] || ROUTE_MAP[`en/${path}`] || '';
+    if (!routeId || routeId === 'home' || routeId === 'about' || routeId === 'privacy') return '';
+    return routeId === 'camera' ? 'web' : routeId;
   };
 
-  const informationPageId = INFORMATION_ROUTE_MAP[normalizedPathname.replace(/^\/+|\/+$/g, '')];
+  const informationPageId = routeId === 'about' || routeId === 'privacy' ? routeId : undefined;
   const informationPage = informationPageId ? INFORMATION_PAGES[informationPageId] : null;
   const informationPageTurkishUrl = informationPage
-    ? `https://sedefada.com/${informationPage.slug}/`
+    ? `https://sedefada.com${ROUTES[informationPageId!].tr}`
     : undefined;
   const informationPageEnglishUrl = informationPage
-    ? `https://sedefada.com/en/${informationPage.slug}/`
+    ? `https://sedefada.com${ROUTES[informationPageId!].en}`
     : undefined;
   const informationPageSeoData = informationPage && informationPageTurkishUrl && informationPageEnglishUrl
     ? {
