@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '../lib/routes';
 
 export function Footer() {
-  const { t, lang } = useLanguage();
+  const { lang } = useLanguage();
   const location = useLocation();
 
   // Internal linking için sayfa linkleri

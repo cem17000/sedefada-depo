@@ -56,7 +56,7 @@ export function Gallery({ images }: GalleryProps) {
           </button>
           <img
             src={lightboxImage}
-              alt={image.title}
+            alt={images.find((image) => image.url === lightboxImage)?.title ?? ''}
             className="max-w-full max-h-[85vh] rounded-xl shadow-2xl border border-sedef-border/50"
           />
         </div>

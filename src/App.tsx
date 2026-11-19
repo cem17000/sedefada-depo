@@ -634,7 +634,9 @@ function AppContent() {
       icon: null as any,
       blogSlug: navItemConfig.blogSlug,
       postId: navItemConfig.type === 'post' ? navItemConfig.postId : undefined,
-      excludeIds: navItemConfig.excludeIds,
+      excludeIds: 'excludeIds' in navItemConfig && Array.isArray(navItemConfig.excludeIds)
+        ? navItemConfig.excludeIds
+        : undefined,
     };
 
     setLoading(true);
