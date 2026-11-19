@@ -67,6 +67,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://sedefada.com/site-hakkinda-iletisim/</loc>
+  </url>
+  <url>
+    <loc>https://sedefada.com/gizlilik-cerezler/</loc>
+  </url>
+  <url>
     <loc>https://sedefada.com/en/</loc>
     <lastmod>2026-09-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -131,5 +137,11 @@
     <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://sedefada.com/en/about-contact/</loc>
+  </url>
+  <url>
+    <loc>https://sedefada.com/en/privacy-cookies/</loc>
   </url>
 </urlset>
