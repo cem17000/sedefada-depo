@@ -19,6 +19,7 @@ import content from './data/content.json';
 import { englishNewspaperClipping } from './data/englishNewspaperClipping';
 import { INFORMATION_PAGES } from './lib/information';
 import { getRouteId, normalizeContentLinks, ROUTES, type RouteId } from './lib/routes';
+import { generateHomeStructuredData, serializeJsonLd } from './lib/structuredData';
 
 type InformationPageId = keyof typeof INFORMATION_PAGES;
 
@@ -79,53 +80,6 @@ const PAGE_METADATA: Record<string, { title: string; description: string; schema
     keywords: ['Sedef Adası iletişim', 'acil numaralar', 'İSKİ Adalar', 'Büyükada polis', 'Adalar belediye']
   }
 };
-
-const HOME_DESCRIPTIONS = {
-  tr: 'Sedef Adası\'nın tarihi, doğal yaşamı, ulaşımı, mimarisi, anıları, eski fotoğrafları, haritaları ve güncel ada yaşamı hakkında kapsamlı bilgi ve arşiv.',
-  en: 'A comprehensive guide and archive about Sedef Island, including its history, nature, transport, architecture, memories, historic photographs, maps and island life.',
-};
-
-function generateHomeStructuredData(lang: 'tr' | 'en') {
-  const homeUrl = lang === 'tr' ? 'https://sedefada.com/' : 'https://sedefada.com/en/';
-  const organizationId = `${homeUrl}#organization`;
-  const websiteId = `${homeUrl}#website`;
-  const webpageId = `${homeUrl}#webpage`;
-  const inLanguage = lang === 'tr' ? 'tr-TR' : 'en-US';
-
-  return [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      '@id': websiteId,
-      name: 'sedefada.com',
-      url: homeUrl,
-      publisher: { '@id': organizationId },
-      inLanguage,
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      '@id': webpageId,
-      name: lang === 'tr' ? 'Sedef Adası' : 'Sedef Island',
-      url: homeUrl,
-      description: HOME_DESCRIPTIONS[lang],
-      isPartOf: { '@id': websiteId },
-      about: { '@id': organizationId },
-      inLanguage,
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      '@id': organizationId,
-      name: 'sedefada.com',
-      url: homeUrl,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${homeUrl}favicon.png`,
-      },
-    },
-  ];
-}
 
 // Generate JSON-LD structured data for a page
 function generateStructuredData(itemId: string, lang: 'tr' | 'en', isCameraView = false) {
@@ -291,21 +245,7 @@ function generateStructuredData(itemId: string, lang: 'tr' | 'en', isCameraView 
           "addressCountry": 'TR'
         }
       }
-    },
-    "additionalProperty": [
-      {
-        "@type": "PropertyValue",
-        "name": lang === 'tr' ? 'Alan' : 'Area',
-        "value": "0.157",
-        "unitCode": "KMT"
-      },
-      {
-        "@type": "PropertyValue",
-        "name": lang === 'tr' ? 'En Yüksek Nokta' : 'Highest Point',
-        "value": "105",
-        "unitCode": "MTR"
-      }
-    ]
+    }
   };
 
   // Specific schema based on page type
@@ -469,6 +409,14 @@ function generateStructuredData(itemId: string, lang: 'tr' | 'en', isCameraView 
 
 // Inject structured data into the page
 function injectStructuredData(schemas: any[] | null) {
+  const serialized = schemas ? serializeJsonLd(schemas) : null;
+  if (serialized) {
+    const matchingScript = Array.from(document.querySelectorAll<HTMLScriptElement>(
+      'script[type="application/ld+json"][data-sedefada-jsonld]',
+    )).find((script) => script.textContent === serialized);
+    if (matchingScript) return;
+  }
+
   // Remove existing structured data
   const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
   existingScripts.forEach(script => script.remove());
@@ -478,7 +426,8 @@ function injectStructuredData(schemas: any[] | null) {
   // Create new structured data script
   const script = document.createElement('script');
   script.type = 'application/ld+json';
-  script.textContent = JSON.stringify(schemas);
+  script.dataset.sedefadaJsonld = 'true';
+  script.textContent = serialized;
   document.head.appendChild(script);
 }
 

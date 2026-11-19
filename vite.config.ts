@@ -7,6 +7,7 @@ import { parseEcologyText } from './src/lib/ecology';
 import { INFORMATION_PAGES } from './src/lib/information';
 import { englishNewspaperClipping } from './src/data/englishNewspaperClipping';
 import { getRouteId, localizedPath, normalizeContentLinks, ROUTES, type RouteId } from './src/lib/routes';
+import { generateHomeStructuredData, serializeJsonLd } from './src/lib/structuredData';
 
 interface StaticNavItem {
   id: string;
@@ -174,7 +175,10 @@ function staticSeoPages(): Plugin {
     name: 'static-localized-seo-pages',
     apply: 'build',
     transformIndexHtml(html) {
-      return html.replace(/<div id="root"[^>]*>[\s\S]*?<\/div>/, `<div id="root">${renderHome('tr')}</div>`);
+      const homeJsonLd = serializeJsonLd(generateHomeStructuredData('tr'));
+      return html
+        .replace(/<div id="root"[^>]*>[\s\S]*?<\/div>/, `<div id="root">${renderHome('tr')}</div>`)
+        .replace('</head>', `<script type="application/ld+json" data-sedefada-jsonld="true">${homeJsonLd}</script>\n  </head>`);
     },
     generateBundle(_, bundle) {
       const stylesheet = Object.values(bundle).find(
@@ -194,10 +198,13 @@ function staticSeoPages(): Plugin {
           });
         }
       }
+      const englishHomeJsonLd = serializeJsonLd(generateHomeStructuredData('en'));
+      const englishHome = renderStaticPage('en', '', '', 'en', stylesheet, entryScript, renderHome('en'))
+        .replace('</head>', `<script type="application/ld+json" data-sedefada-jsonld="true">${englishHomeJsonLd}</script>\n  </head>`);
       this.emitFile({
         type: 'asset',
         fileName: 'en/index.html',
-        source: renderStaticPage('en', '', '', 'en', stylesheet, entryScript, renderHome('en')),
+        source: englishHome,
       });
       for (const [id, page] of Object.entries(INFORMATION_PAGES)) {
         for (const lang of ['tr', 'en'] as const) {
