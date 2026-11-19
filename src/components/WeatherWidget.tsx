@@ -91,8 +91,10 @@ const WMO_BY_LANG: Record<string, Record<number, string>> = {
   tr: WMO_TR, en: WMO_EN, de: WMO_DE, es: WMO_ES, fr: WMO_FR, ar: WMO_AR,
 };
 
-function getWindDirection(deg: number): string {
-  const dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+function getWindDirection(deg: number, lang: string): string {
+  const dirs = lang === 'tr'
+    ? ['K', 'KKD', 'KD', 'DKD', 'D', 'DGD', 'GD', 'GGD', 'G', 'GGB', 'GB', 'BGB', 'B', 'BKD', 'KB', 'KKB']
+    : ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
   return dirs[Math.round(deg / 22.5) % 16];
 }
 
@@ -252,7 +254,7 @@ export function WeatherWidget() {
             const wmoEntry = WMO_CODES[day.weatherCode] ?? { icon: '❓' };
             const wmoLabels = WMO_BY_LANG[lang] ?? WMO_EN;
             const weatherLabel = wmoLabels[day.weatherCode] ?? '—';
-            const windDir = getWindDirection(day.windDirectionDominant);
+            const windDir = getWindDirection(day.windDirectionDominant, lang);
             const windArrow = getWindArrow(day.windDirectionDominant);
             const windLabel = getWindLabel(day.windSpeedMax, t);
             const waveVal = day.waveHeightMax;
@@ -357,7 +359,7 @@ export function WeatherWidget() {
             
             {/* Data rows */}
             {forecasts.map((day, idx) => {
-              const windDir = getWindDirection(day.windDirectionDominant);
+              const windDir = getWindDirection(day.windDirectionDominant, lang);
               const windArrow = getWindArrow(day.windDirectionDominant);
               const windLabel = getWindLabel(day.windSpeedMax, t);
               return (
